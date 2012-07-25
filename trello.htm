@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+  <script src="trello_api_key.js"></script>
+  <!-- The client library requires jQuery  -->
+  <script src="http://code.jquery.com/jquery.js"></script>
+  <script src="http://code.jquery.com/ui/1.8.22/jquery-ui.min.js"></script>
+  <link rel="stylesheet" href="http://code.jquery.com/ui/1.8.22/themes/start/jquery-ui.css" type="text/css" />
+  
+  <script src="jquery_combobox.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+
+var showBoards = function(boards) {
+    $("#output").empty();
+    
+    var $uiwidget = $('<div class="ui-widget">').appendTo("#output");
+    var $label = $('<label>').text('Your boards: ').appendTo($uiwidget);
+    var $select = $('<select id="combobox">').appendTo($uiwidget)
+
+    $("#combobox").combobox();
+    $("#toggle").click(function() {
+		$( "#combobox" ).toggle();
+    });
+
+    $.each(boards, function(idx, board) {
+        var $option = $('<option value='+board.id+'>').text(board.name).appendTo($select);
+        // funzt net :-/
+//        if (idx == 0) {
+//            $option.attr('selected', true);
+//        }
+    });
+    
+}
+
+var onAuthorize = function() {
+    updateLoggedIn();
+    
+    Trello.members.get("me", function(member) {
+        $("#fullName").text(member.fullName);
+    });
+    
+    Trello.get("members/me/boards", {},  showBoards);
+};
+
+var updateLoggedIn = function() {
+    var isLoggedIn = (typeof Trello != "undefined") && Trello.authorized();
+    $("#connectButton").toggle(!isLoggedIn);
+    $("#disconnectButton, #loggedin").toggle(isLoggedIn);        
+};
+    
+var logout = function() {
+    Trello.deauthorize();
+    updateLoggedIn();
+};
+            
+var trelloLogin = function(data, textStatus, jqxhr) {
+	Trello.authorize({
+    	interactive:true,
+        type: "popup",
+        success: onAuthorize,
+        expiration: "1hour",
+        scope: { read: true, write: false }
+    });	
+}
+
+var bindActions = function() {
+	
+	$("#connectButton").button();
+	$("#connectButton").click(function() {
+		jQuery.getScript('https://api.trello.com/1/client.js?key='+TRELLO_API_KEY, trelloLogin);
+	});
+	
+	$("#disconnectButton").button();
+	$("#disconnectButton").click(logout);
+	
+	updateLoggedIn();
+};
+</script>
+
+<style type="text/css">
+#loggedin {
+	font-family: "Trebuchet MS", "Arial", "Helvetica", "Verdana", "sans-serif";
+	font-size: 1.3em;
+	line-height: 1.4em;
+}
+body, button {
+	font-size: 66%;
+}
+#kopfleiste {
+	float: right;
+}
+</style>
+
+</head>
+<body onload="bindActions()">
+
+<div id="kopfleiste">
+    <button id="connectButton">Connect To Trello</button>
+    <button id="disconnectButton">Log Out</button>
+</div>
+
+<div id="loggedin">
+    <div id="header">
+        <p>Trello: logged in as <span id="fullName"></span></p>
+    </div>
+    
+    <div id="output"> </div>
+</div>    
+
+<script type="text/javascript">updateLoggedIn();</script>
+
+</body>
+</html>
