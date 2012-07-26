@@ -13,6 +13,40 @@
 
 <script type="text/javascript">
 
+var showCards = function(cards) {
+	var $uiwidget = $('<div class="ui-widget">').appendTo("#output");
+    var $label = $('<p>').text('Your Cards: ').appendTo($uiwidget);
+    $.each(cards, function(idx, card) {
+        $('<p style="padding-left: 2em;">').text(card.name + ' (' + card.id+ ')').appendTo($uiwidget);
+    });
+}
+
+function onListSelected(listId) {
+	Trello.get("lists/"+listId+"/cards", {},  showCards);
+}
+
+var showLists = function(lists) {
+	var $uiwidget = $('<div class="ui-widget">').appendTo("#output");
+    var $label = $('<label>').text('Your Lists: ').appendTo($uiwidget);
+    var $select = $('<select id="comboboxLists">').appendTo($uiwidget)
+
+    $("#comboboxLists").combobox({
+    		selected: function(event, ui) {
+    			var listid = ui.item.value;
+    			onListSelected(listid);
+    		}
+	   	}
+    );
+    
+    $.each(lists, function(idx, list) {
+        var $option = $('<option value='+list.id+'>').text(list.name).appendTo($select);
+    });
+}
+
+function onBoardSelected(boardId) {
+	Trello.get("boards/"+boardId+"/lists", { cards :"all" },  showLists);
+}
+
 var showBoards = function(boards) {
     $("#output").empty();
     
@@ -20,11 +54,14 @@ var showBoards = function(boards) {
     var $label = $('<label>').text('Your boards: ').appendTo($uiwidget);
     var $select = $('<select id="combobox">').appendTo($uiwidget)
 
-    $("#combobox").combobox();
-    $("#toggle").click(function() {
-		$( "#combobox" ).toggle();
-    });
-
+    $("#combobox").combobox({
+    		selected: function(event, ui) {
+    			var boardid = ui.item.value;
+    			onBoardSelected(boardid);
+    		}
+	   	}
+    );
+    
     $.each(boards, function(idx, board) {
         var $option = $('<option value='+board.id+'>').text(board.name).appendTo($select);
         // funzt net :-/
