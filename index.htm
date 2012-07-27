@@ -2,99 +2,43 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>Insert title here</title>
-<script src="/jit/jit.js" type="text/javascript"></script>
-<script src="data.js" type="text/javascript"></script>
+<title>Trelloviz</title>
+  <script src="trello_api_key.js"></script>
+  <!-- The client library requires jQuery  -->
+  <script src="http://code.jquery.com/jquery.js"></script>
+  <script src="http://code.jquery.com/ui/1.8.22/jquery-ui.min.js"></script>
+  <link rel="stylesheet" href="http://code.jquery.com/ui/1.8.22/themes/start/jquery-ui.css" type="text/css" />
+  
+  <script src="jquery_combobox.js" type="text/javascript"></script>
+  <script src="trelloviz-app.js" type="text/javascript"></script>
+
 <style type="text/css">
-.tooltip {
-	font-family: "courier";
-	font-size: 80%;
-	border: 1px solid gray;
-  	color: #000000;
-  	outline: none;
-	cursor: help;
-	text-decoration: none;
-	padding: 1px 3px 1px 3px; 
-	
-	background-color: yellow;
-	filter:alpha(opacity=75); /* IE */
-	-moz-opacity: 0.75; /* Mozilla */
-	opacity: 0.75; /* Opera */
-	
-	border-radius: 5px 5px;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-	box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1);
-	-webkit-box-shadow: 5px 5px rgba(0, 0, 0, 0.1);
-	-moz-box-shadow: 5px 5px rgba(0, 0, 0, 0.1);
+body {
+	font-family: "Trebuchet MS", "Arial", "Helvetica", "Verdana", "sans-serif";
+	font-size: 66%;
+}
+#kopfleiste {
+	float: right;
 }
 </style>
-<script>
-	var areaChart = null;
-	function init() {
-		areaChart = new $jit.AreaChart({
-			//id of the visualization container
-			injectInto : 'viz_canvas',
-			//add animations
-			animate : true,
-			Margin : { top : 5, left : 5, right : 5, bottom : 5 },
-			labelOffset : 10,
-			showAggregates : true,
-			showLabels : false,
-			type : 'stacked:gradient',
-			//label styling
-			Label : {
-				type : 'Native', //can be 'Native' or 'HTML'
-				size : 13,
-				family : 'monospace',
-				color : 'white'
-			},
-			//enable tips
-			Tips : {
-				enable : true,
-				onShow : function(tip, elem) {
-					var tt = document.createElement("span");
-					tt.className = "tooltip"
-					tt.innerHTML = "" + elem.name + " " + elem.value;
-					while (tip.hasChildNodes()) tip.removeChild(tip.firstChild);
-					tip.appendChild(tt);
-				}
-			},
-			//add left and right click handlers
-			filterOnClick : false,
-			restoreOnRightClick : true
-		});
-		
-		
-		areaChart.loadJSON(viz_data);
-		
-		
-		// ------------------
-		
-		/*		
-		var list = $jit.id('id-list');
-		var button = $jit.id('update');
-		var restoreButton = $jit.id('restore');
-		
-		//update json on click
-		$jit.util.addEvent(button, 'click', function() {
-			var util = $jit.util;
-			if (util.hasClass(button, 'gray')) return;
-			util.removeClass(button, 'white');
-			util.addClass(button, 'gray');
-			areaChart.updateJSON(json2);
-		});
-		//restore graph on click
-		$jit.util.addEvent(restoreButton, 'click', function() {
-			areaChart.restore();
-		});
-		*/
-	}
-</script>
+
 </head>
-<body onload="init();">
-	<div id="viz_container">
-		<div id="viz_canvas" style="width: 600px; height: 400px;"> </div>
-	</div>
+<body onload="bindActions()">
+
+<div id="kopfleiste">
+    <button id="connectButton">Connect To Trello</button>
+    <button id="disconnectButton">Log Out</button>
+</div>
+
+<div id="loggedin">
+    <div id="header">
+        <p>Trello: logged in as <span id="fullName"> </span></p>
+    </div>
+    
+    <div id="output"> </div>
+</div>    
+
+<script type="text/javascript">updateLoggedIn();</script>
+
 </body>
 </html>
