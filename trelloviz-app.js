@@ -1,4 +1,40 @@
-var computeVizData = function(actions) {
+var showGraphic = function (viz_data) {
+    var areaChart = new $jit.AreaChart({
+        //id of the visualization container
+        injectInto:'viz_canvas',
+        //add animations
+        animate:true,
+        Margin:{ top:5, left:5, right:5, bottom:5 },
+        labelOffset:10,
+        showAggregates:true,
+        showLabels:true,
+        type:'stacked:gradient',
+        //label styling
+        Label:{
+            type:'Native', //can be 'Native' or 'HTML'
+            size:13,
+            family:'monospace',
+            color:'silver'
+        },
+        //enable tips
+        Tips:{
+            enable:true,
+            onShow:function (tip, elem) {
+                var tt = document.createElement("span");
+                tt.className = "tooltip"
+                tt.innerHTML = "" + elem.name + " " + elem.value;
+                while (tip.hasChildNodes()) tip.removeChild(tip.firstChild);
+                tip.appendChild(tt);
+            }
+        },
+        //add left and right click handlers
+        filterOnClick:false,
+        restoreOnRightClick:true
+    });
+    areaChart.loadJSON(viz_data);
+}
+
+var computeVizData = function (data) {
     var vizTimestamps = [];
     var vizPlan = [];
     var vizWiP = [];
@@ -54,140 +90,134 @@ var computeVizData = function(actions) {
     });
 
     var viz_data = {
-        'label':vizTimestamps,
-        'values':[
-            {
-                'label':'ToDo',
-                'values':vizPlan
-            },
-            {
-                'label':'WiP',
-                'values':vizWiP
-            },
-            {
-                'label':'Done',
-                'values':vizDone
-            }
-        ]
-
+        'label':['ToDo', 'WiP', 'Done'],
+        'values':[]
     };
-    return viz_data;
+    for (var i=0; i<vizTimestamps.length; i++) {
+        viz_data.values.push(
+            {
+                'label':vizTimestamps[i],
+                'values': [vizPlan[i], vizWiP[i], vizDone[i]]
+            }
+        );
+    };
+    showGraphic(viz_data);
 }
 
-var showCards = function(cards) {
-	var $uiwidget = $('<div class="ui-widget">').appendTo("#output");
+var showCards = function (cards) {
+    var $uiwidget = $('<div class="ui-widget">').appendTo("#output");
     $('<p>').text('Your Cards: ').appendTo($uiwidget);
-    $.each(cards, function(idx, card) {
-        $('<p style="padding-left: 2em;">').text(card.name + ' (' + card.id+ ')').appendTo($uiwidget);
+    $.each(cards, function (idx, card) {
+        $('<p style="padding-left: 2em;">').text(card.name + ' (' + card.id + ')').appendTo($uiwidget);
     });
 };
 
-var showActions = function(actions) {
-	var $uiwidget = $('<div class="ui-widget">').appendTo("#output");
+var showActions = function (actions) {
+    var $uiwidget = $('<div class="ui-widget">').appendTo("#output");
     $('<p>').text('All Actions: ').appendTo($uiwidget);
     var $ul = $('<ul>').appendTo($uiwidget);
-    $.each(actions, function(idx, action) {
-        $('<li>').text(action.type + ' (' + action.date+ ')').appendTo($ul);
+    $.each(actions, function (idx, action) {
+        $('<li>').text(action.type + ' (' + action.date + ')').appendTo($ul);
     });
 };
 
 function onListSelected(listId) {
-	Trello.get("lists/"+listId+"/cards", {},  showCards);
+    Trello.get("lists/" + listId + "/cards", {}, showCards);
 }
 
-var showLists = function(lists) {
-	var $uiwidget = $('<div class="ui-widget">').appendTo("#output");
+var showLists = function (lists) {
+    var $uiwidget = $('<div class="ui-widget">').appendTo("#output");
     $('<label>').text('Your Lists: ').appendTo($uiwidget);
     var $select = $('<select id="comboboxLists">').appendTo($uiwidget);
 
     $("#comboboxLists").combobox({
-    		selected: function(event, ui) {
-    			var listid = ui.item.value;
-    			onListSelected(listid);
-    		}
-	   	}
+            selected:function (event, ui) {
+                var listid = ui.item.value;
+                onListSelected(listid);
+            }
+        }
     );
-    
-    $.each(lists, function(idx, list) {
-        $('<option value='+list.id+'>').text(list.name).appendTo($select);
+
+    $.each(lists, function (idx, list) {
+        $('<option value=' + list.id + '>').text(list.name).appendTo($select);
     });
 };
 
 function onShowActionForBoard(boardId) {
-	Trello.get("boards/"+boardId+"/actions", { /* fields:"data,type,date" */ limit:"1000"},  computeVizData);
+    Trello.get("boards/" + boardId + "/actions", { /* fields:"data,type,date" */ limit:"1000"}, computeVizData);
 }
 
 function onBoardSelected(boardId) {
-	var $uiwidget = $('<div class="ui-widget">').appendTo("#output");
-	var $btn = $('<button>').text('Show Actions').appendTo($uiwidget);
-	$btn.button();
-	$btn.click(function() {
-		onShowActionForBoard(boardId);
-	});
-	
-	Trello.get("boards/"+boardId+"/lists", { cards :"all" },  showLists);
+    var $uiwidget = $('<div class="ui-widget">').appendTo("#output");
+    var $btn = $('<button>').text('Show Actions').appendTo($uiwidget);
+    $btn.button();
+    $btn.click(function () {
+        onShowActionForBoard(boardId);
+    });
+
+    Trello.get("boards/" + boardId + "/lists", { cards:"all" }, showLists);
 }
 
-var showBoards = function(boards) {
+var showBoards = function (boards) {
     $("#output").empty();
-    
+
     var $uiwidget = $('<div class="ui-widget">').appendTo("#output");
     $('<label>').text('Your boards: ').appendTo($uiwidget);
     var $select = $('<select id="combobox">').appendTo($uiwidget);
 
     $("#combobox").combobox({
-    		selected: function(event, ui) {
-    			var boardid = ui.item.value;
-    			onBoardSelected(boardid);
-    		}
-	   	}
+            selected:function (event, ui) {
+                var boardid = ui.item.value;
+                onBoardSelected(boardid);
+            }
+        }
     );
-    
-    $.each(boards, function(idx, board) {
-        $('<option value='+board.id+'>').text(board.name).appendTo($select);
+
+    $.each(boards, function (idx, board) {
+        $('<option value=' + board.id + '>').text(board.name).appendTo($select);
     });
 };
 
-var onAuthorize = function() {
+var onAuthorize = function () {
     updateLoggedIn();
-    
-    Trello.members.get("me", function(member) {
+
+    Trello.members.get("me", function (member) {
         $("#fullName").text(member.fullName);
     });
-    
-    Trello.get("members/me/boards", {},  showBoards);
+
+    Trello.get("members/me/boards", {}, showBoards);
 };
 
-var updateLoggedIn = function() {
+var updateLoggedIn = function () {
     var isLoggedIn = (typeof Trello != "undefined") && Trello.authorized();
     $("#connectButton").toggle(!isLoggedIn);
-    $("#disconnectButton, #loggedin").toggle(isLoggedIn);        
+    $("#disconnectButton, #loggedin").toggle(isLoggedIn);
 };
-    
-var logout = function() {
+
+var logout = function () {
     Trello.deauthorize();
     updateLoggedIn();
 };
-            
-var trelloLogin = function(data, textStatus, jqxhr) {
-	Trello.authorize({
-    	interactive:true,
-        type: "popup",
-        success: onAuthorize,
-        expiration: "1hour",
-        scope: { read: true, write: false }
-    });	
+
+var trelloLogin = function (data, textStatus, jqxhr) {
+    Trello.authorize({
+        interactive:true,
+        type:"popup",
+        success:onAuthorize,
+        expiration:"1hour",
+        scope:{ read:true, write:false }
+    });
 };
 
-var bindActions = function() {
+var bindActions = function () {
 
-	$("#connectButton").button();
-	$("#connectButton").click(function() {
-		jQuery.getScript('https://api.trello.com/1/client.js?key='+TRELLO_API_KEY, trelloLogin);
-	});
-	
-	$("#disconnectButton").button();
-	$("#disconnectButton").click(logout);
-	
-	updateLoggedIn();
+    $("#connectButton").button();
+    $("#connectButton").click(function () {
+        jQuery.getScript('https://api.trello.com/1/client.js?key=' + TRELLO_API_KEY, trelloLogin);
+    });
+
+    $("#disconnectButton").button();
+    $("#disconnectButton").click(logout);
+
+    updateLoggedIn();
 };

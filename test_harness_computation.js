@@ -53,20 +53,14 @@ $.each(data, function (idx, trelloAction) {
 });
 
 var viz_data = {
-    'label':vizTimestamps,
-    'values':[
-        {
-            'label':'ToDo',
-            'values':vizPlan
-        },
-        {
-            'label':'WiP',
-            'values':vizWiP
-        },
-        {
-            'label':'Done',
-            'values':vizDone
-        }
-    ]
-
+    'label':['ToDo', 'WiP', 'Done'],
+    'values':[]
+};
+for (var i=0; i<vizTimestamps.length; i++) {
+    viz_data.values.push(
+            {
+                'label':vizTimestamps[i],
+                'values': [vizPlan[i], vizWiP[i], vizDone[i]]
+            }
+    );
 };
