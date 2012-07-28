@@ -1,3 +1,21 @@
+/**
+ Licensed to the Apache Software Foundation (ASF) under one
+ or more contributor license agreements.  See the NOTICE file
+ distributed with this work for additional information
+ regarding copyright ownership.  The ASF licenses this file
+ to you under the Apache License, Version 2.0 (the
+ "License"); you may not use this file except in compliance
+ with the License.  You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing,
+ software distributed under the License is distributed on an
+ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ KIND, either express or implied.  See the License for the
+ specific language governing permissions and limitations
+ under the License.
+ */
 var data = [
     {"id":"50130fedbf03878509000cdf", "idMemberCreator":"500da53e30a2363615013888", "data":{"board":{"name":"Tests", "id":"500daadf637e1efe2a2348f9"}, "card":{"idShort":2, "name":"todo2", "id":"500daaea637e1efe2a234bc4", "pos":"57343.125"}, "old":{"pos":57343.125}}, "type":"updateCard", "date":"2012-07-27T22:02:21.437Z", "memberCreator":{"id":"500da53e30a2363615013888", "fullName":"Martin Kirst", "initials":"MK", "username":"martinkirst1"}},
     {"id":"50130fedbf03878509000cdd", "idMemberCreator":"500da53e30a2363615013888", "data":{"listAfter":{"name":"To Do", "id":"500daadf637e1efe2a2348fa"}, "listBefore":{"name":"Done", "id":"500daadf637e1efe2a2348fc"}, "board":{"name":"Tests", "id":"500daadf637e1efe2a2348f9"}, "card":{"idShort":2, "name":"todo2", "id":"500daaea637e1efe2a234bc4", "idList":"500daadf637e1efe2a2348fa"}, "old":{"idList":"500daadf637e1efe2a2348fc"}}, "type":"updateCard", "date":"2012-07-27T22:02:21.432Z", "memberCreator":{"id":"500da53e30a2363615013888", "fullName":"Martin Kirst", "initials":"MK", "username":"martinkirst1"}},
