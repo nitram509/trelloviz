@@ -65,7 +65,7 @@
     </style>
 
 </head>
-<body onload="bindActions()">
+<body onload="new window.Trelloviz().bindActions()">
 
 <div id="kopfleiste">
     <button id="connectButton">Connect To Trello</button>
@@ -83,8 +83,6 @@
 <div id="viz_container">
     <div id="viz_canvas" style="width: 600px; height: 400px;"></div>
 </div>
-
-<script type="text/javascript">updateLoggedIn();</script>
 
 </body>
 </html>
