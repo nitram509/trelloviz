@@ -212,13 +212,6 @@ Trelloviz.prototype.showSettings = function() {
                 allFields.val( "" ).removeClass( "ui-state-error" );
             }
         });
-
-        $( "#create-user" )
-            .button()
-            .click(function() {
-                $( "#dialog-form" ).dialog( "open" );
-            });
-
 }
 
 
@@ -227,18 +220,16 @@ Trelloviz.prototype.bindActions = function () {
 
     $( "#dialog-form" ).dialog({ autoOpen: false });
 
-    $("#settingsButton").button();
-    $("#settingsButton").click(function(){
+    $("#settingsButton").button().click(function(){
         $( "#dialog-form" ).dialog( "open" );
     });
 
-    $("#connectButton").button();
-    $("#connectButton").click(function () {
+    $("#connectButton").button().click(function () {
         jQuery.getScript('https://api.trello.com/1/client.js?key=' + TRELLO_API_KEY, callback);
     });
 
-    $("#disconnectButton").button();
-    $("#disconnectButton").click(this.logout);
+    $("#disconnectButton").button().click(this.logout);
+
     this.updateLoggedIn();
 };
 
