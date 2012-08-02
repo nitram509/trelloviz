@@ -9,6 +9,4 @@ Screenshot ![Screenshot from the prototype](/nitram509/trelloviz/raw/master/scre
 External dependencies
 ---------------------
 
-* jQuery [http://www.jquery.com]
-* jQueryUI [http://www.jqueryui.com]
 * JavaScript InfoVis Toolkit [http://thejit.org/]

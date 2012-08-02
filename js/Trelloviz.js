@@ -20,12 +20,59 @@
  * under the License.
  */
 
-function Trelloviz () {
-    var trellovizData = new TrellovizData();
-}
+var Trelloviz_Data = new TrellovizData();
+
+var Trelloviz_updateLoggedIn = function () {
+    var isLoggedIn = (typeof Trello != "undefined") && Trello.authorized();
+    $("#connectButton").toggle(!isLoggedIn);
+    $("#disconnectButton, #loggedin").toggle(isLoggedIn);
+};
+
+var Trelloviz_onAuthorize = function () {
+    Trelloviz_updateLoggedIn();
+
+    Trello.members.get("me", function (member) {
+        $("#fullName").text(member.fullName);
+    });
+
+    Trello.get("members/me/boards", {}, Trelloviz_showBoards);
+};
 
 
-Trelloviz.prototype.showCards = function (cards) {
+var Trelloviz_trelloLogin = function (data, textStatus, jqxhr) {
+    Trello.authorize({
+        interactive:true,
+        type:"popup",
+        success:Trelloviz_onAuthorize,
+        expiration:"1hour",
+        scope:{ read:true, write:false }
+    });
+};
+
+
+var Trelloviz_logout = function () {
+    Trello.deauthorize();
+    Trelloviz_updateLoggedIn();
+};
+
+var Trelloviz_bindActions = function () {
+    //$( "#dialog-form" ).dialog({ autoOpen: false });
+
+//    $("#settingsButton").button().click(function(){
+//        $( "#dialog-form" ).dialog( "open" );
+//    });
+
+    $("#connectButton").click(function () {
+        jQuery.getScript('https://api.trello.com/1/client.js?key=' + TRELLO_API_KEY, Trelloviz_trelloLogin);
+    });
+
+    $("#disconnectButton").click(Trelloviz_logout);
+
+    Trelloviz_updateLoggedIn();
+};
+
+
+var Trelloviz_showCards = function (cards) {
     var $uiwidget = $('<div class="ui-widget">').appendTo("#output");
     $('<p>').text('Your Cards: ').appendTo($uiwidget);
     $.each(cards, function (idx, card) {
@@ -34,7 +81,7 @@ Trelloviz.prototype.showCards = function (cards) {
 };
 
 
-Trelloviz.prototype.showActions = function (actions) {
+var Trelloviz_showActions = function (actions) {
     var $uiwidget = $('<div class="ui-widget">').appendTo("#output");
     $('<p>').text('All Actions: ').appendTo($uiwidget);
     var $ul = $('<ul>').appendTo($uiwidget);
@@ -44,12 +91,12 @@ Trelloviz.prototype.showActions = function (actions) {
 };
 
 
-Trelloviz.prototype.onListSelected = function (listId) {
+var Trelloviz_onListSelected = function (listId) {
     Trello.get("lists/" + listId + "/cards", {}, me.showCards);
 }
 
 
-Trelloviz.prototype.showLists = function (lists) {
+var Trelloviz_showLists = function (lists) {
     var $uiwidget = $('<div class="ui-widget">').appendTo("#output");
     $('<label>').text('Your Lists: ').appendTo($uiwidget);
     var $select = $('<select id="comboboxLists">').appendTo($uiwidget);
@@ -68,18 +115,18 @@ Trelloviz.prototype.showLists = function (lists) {
 };
 
 
-Trelloviz.prototype.computeAndShow = function(data) {
-    var computed = this.trellovizData.computeVizData();
-    this.showGraphic(computed);
+var Trelloviz_computeAndShow = function (data) {
+    var computed = Trelloviz_Data.computeVizData();
+    Trelloviz_showGraphic(computed);
 };
 
 
-Trelloviz.prototype.onShowActionForBoard = function (boardId) {
+var Trelloviz_onShowActionForBoard = function (boardId) {
     Trello.get("boards/" + boardId + "/actions", { /* fields:"data,type,date" */ limit:"1000"}, me.computeAndShow);
 }
 
 
-Trelloviz.prototype.onBoardSelected = function (boardId) {
+var Trelloviz_onBoardSelected = function (boardId) {
     var $uiwidget = $('<div class="ui-widget">').appendTo("#output");
     var $btn = $('<button>').text('Show Actions').appendTo($uiwidget);
     $btn.button();
@@ -91,7 +138,7 @@ Trelloviz.prototype.onBoardSelected = function (boardId) {
 }
 
 
-Trelloviz.prototype.showBoards = function (boards) {
+var Trelloviz_showBoards = function (boards) {
     $("#output").empty();
 
     var $uiwidget = $('<div class="ui-widget">').appendTo("#output");
@@ -112,129 +159,74 @@ Trelloviz.prototype.showBoards = function (boards) {
 };
 
 
-Trelloviz.prototype.onAuthorize = function () {
-    me.updateLoggedIn();
-
-    Trello.members.get("me", function (member) {
-        $("#fullName").text(member.fullName);
-    });
-
-    Trello.get("members/me/boards", {}, me.showBoards);
-};
+var Trelloviz_showSettings = function () {
 
 
-Trelloviz.prototype.updateLoggedIn = function () {
-    var isLoggedIn = (typeof Trello != "undefined") && Trello.authorized();
-    $("#connectButton").toggle(!isLoggedIn);
-    $("#disconnectButton, #loggedin").toggle(isLoggedIn);
-};
+    var name = $("#name"),
+        allFields = $([]).add(name),
+        tips = $(".validateTips");
 
+    function updateTips(t) {
+        tips
+            .text(t)
+            .addClass("ui-state-highlight");
+        setTimeout(function () {
+            tips.removeClass("ui-state-highlight", 1500);
+        }, 500);
+    }
 
-Trelloviz.prototype.logout = function () {
-    Trello.deauthorize();
-    me.updateLoggedIn();
-};
-
-
-Trelloviz.prototype.trelloLogin = function (data, textStatus, jqxhr) {
-    var successCallback = this.onAuthorize;
-    Trello.authorize({
-        interactive:true,
-        type:"popup",
-        success:successCallback,
-        expiration:"1hour",
-        scope:{ read:true, write:false }
-    });
-};
-
-
-Trelloviz.prototype.showSettings = function() {
-
-
-        var name = $( "#name" ),
-            allFields = $( [] ).add( name ),
-            tips = $( ".validateTips" );
-
-        function updateTips( t ) {
-            tips
-                .text( t )
-                .addClass( "ui-state-highlight" );
-            setTimeout(function() {
-                tips.removeClass( "ui-state-highlight", 1500 );
-            }, 500 );
+    function checkLength(o, n, min, max) {
+        if (o.val().length > max || o.val().length < min) {
+            o.addClass("ui-state-error");
+            updateTips("Length of " + n + " must be between " +
+                min + " and " + max + ".");
+            return false;
+        } else {
+            return true;
         }
+    }
 
-        function checkLength( o, n, min, max ) {
-            if ( o.val().length > max || o.val().length < min ) {
-                o.addClass( "ui-state-error" );
-                updateTips( "Length of " + n + " must be between " +
-                    min + " and " + max + "." );
-                return false;
-            } else {
-                return true;
-            }
+    function checkRegexp(o, regexp, n) {
+        if (!( regexp.test(o.val()) )) {
+            o.addClass("ui-state-error");
+            updateTips(n);
+            return false;
+        } else {
+            return true;
         }
+    }
 
-        function checkRegexp( o, regexp, n ) {
-            if ( !( regexp.test( o.val() ) ) ) {
-                o.addClass( "ui-state-error" );
-                updateTips( n );
-                return false;
-            } else {
-                return true;
-            }
-        }
+    $("#dialog-form").dialog({
+        autoOpen:false,
+        height:300,
+        width:350,
+        modal:true,
+        buttons:{
+            "Create an account":function () {
+                var bValid = true;
+                allFields.removeClass("ui-state-error");
+                bValid = bValid && checkLength(name, "username", 3, 16);
+                bValid = bValid && checkRegexp(name, /^[a-z]([0-9a-z_])+$/i, "Username may consist of a-z, 0-9, underscores, begin with a letter.");
 
-        $( "#dialog-form" ).dialog({
-            autoOpen: false,
-            height: 300,
-            width: 350,
-            modal: true,
-            buttons: {
-                "Create an account": function() {
-                    var bValid = true;
-                    allFields.removeClass( "ui-state-error" );
-                    bValid = bValid && checkLength( name, "username", 3, 16 );
-                    bValid = bValid && checkRegexp( name, /^[a-z]([0-9a-z_])+$/i, "Username may consist of a-z, 0-9, underscores, begin with a letter." );
-
-                    if ( bValid ) {
-                        $( "#users tbody" ).append( "<tr>" +
-                            "<td>" + name.val() + "</td>" +
-                            "</tr>" );
-                        $( this ).dialog( "close" );
-                    }
-                },
-                Cancel: function() {
-                    $( this ).dialog( "close" );
+                if (bValid) {
+                    $("#users tbody").append("<tr>" +
+                        "<td>" + name.val() + "</td>" +
+                        "</tr>");
+                    $(this).dialog("close");
                 }
             },
-            close: function() {
-                allFields.val( "" ).removeClass( "ui-state-error" );
+            Cancel:function () {
+                $(this).dialog("close");
             }
-        });
+        },
+        close:function () {
+            allFields.val("").removeClass("ui-state-error");
+        }
+    });
 }
 
 
-Trelloviz.prototype.bindActions = function () {
-    var callback = this.trelloLogin;
-
-    $( "#dialog-form" ).dialog({ autoOpen: false });
-
-    $("#settingsButton").button().click(function(){
-        $( "#dialog-form" ).dialog( "open" );
-    });
-
-    $("#connectButton").button().click(function () {
-        jQuery.getScript('https://api.trello.com/1/client.js?key=' + TRELLO_API_KEY, callback);
-    });
-
-    $("#disconnectButton").button().click(this.logout);
-
-    this.updateLoggedIn();
-};
-
-
-Trelloviz.prototype.showGraphic = function (viz_data) {
+var Trelloviz_showGraphic = function (viz_data) {
     var areaChart = new $jit.AreaChart({
         //id of the visualization container
         injectInto:'viz_canvas',
