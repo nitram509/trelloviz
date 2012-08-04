@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Bootstrap, from Twitter</title>
+    <title>Trelloviz</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Trelloviz">
     <meta name="author" content="Martin W. Kirst">
@@ -42,15 +42,18 @@
           <a class="brand" href="#">Trelloviz</a>
 
             <div class="btn-group pull-right">
-                <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                <a class="btn dropdown-toggle btn-small" data-toggle="dropdown" href="#">
                     <i class="icon-wrench"></i> Settings
                     <span class="caret"></span>
                 </a>
-                <ul class="dropdown-menu">
-                    <li id="connectButton"><a href="#">Log Into Trello.com</a></li>
-                    <li id="disconnectButton" style="display: none;"><a href="#">Logout</a></li>
-                    <li class="divider"></li>
+                <ul class="dropdown-menu btn-small">
                     <li><a href="#">Settings</a></li>
+                </ul>
+            </div>
+            <div class="btn-group pull-right">
+                <ul>
+                    <button id="connectButton" class="btn btn-primary">Log Into Trello</button>
+                    <button id="disconnectButton" class="btn" style="display: none;" >Logout</button>
                 </ul>
             </div>
 
@@ -67,13 +70,13 @@
 
     <div class="container">
 
-        <div id="loggedin">
-            <div id="header">
-                <p>Trello: logged in as <span id="fullName">Not logged in.</span></p>
-            </div>
 
-            <div id="output"></div>
+        <div id="loggedin" class="alert alert-success pull-right">
+            <button class="close fade in out" data-dismiss="alert" href="#">×</button>
+            <p>Trello: logged in as <span id="fullName">Not logged in.</span></p>
         </div>
+
+        <div id="output"></div>
 
         <div id="viz_container">
             <div id="viz_canvas" style="width: 600px; height: 400px;"></div>
@@ -86,7 +89,7 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="assets/js/jquery.js"></script>
     <!--<script src="assets/js/bootstrap-transition.js"></script>-->
-    <!--<script src="assets/js/bootstrap-alert.js"></script>-->
+    <script src="assets/js/bootstrap-alert.js"></script>
     <!--<script src="assets/js/bootstrap-modal.js"></script>-->
     <script src="assets/js/bootstrap-dropdown.js"></script>
     <!--<script src="assets/js/bootstrap-scrollspy.js"></script>-->

@@ -141,22 +141,17 @@ var Trelloviz_onBoardSelected = function (boardId) {
 var Trelloviz_showBoards = function (boards) {
     $("#output").empty();
 
-    var $uiwidget = $('<form class="form-horizontal">').appendTo("#output");
-    var $controlgroup = $('<div class="control-group">').appendTo($uiwidget);
+    var $forminline = $('<form class="form-inline">').appendTo("#output");
+    var $controlgroup = $('<div class="control-group">').appendTo($forminline);
     $('<label>').text('Your boards: ').appendTo($controlgroup);
     var $controls = $('<div class="controls">').appendTo($controlgroup);
     var $select = $('<select id="combobox">').appendTo($controls);
 
-//    $("#combobox").combobox({
-//            selected:function (event, ui) {
-//                var boardid = ui.item.value;
-//                me.onBoardSelected(boardid);
-//            }
-//        }
-//    );
+    var options = [];
 
     $.each(boards, function (idx, board) {
         var $opt = $('<option value=' + board.id + '>').text(board.name).appendTo($select);
+        options.push($opt[0]);
         $($opt).click(
             function (event) {
                 var boardid = event.target.value;
@@ -164,6 +159,15 @@ var Trelloviz_showBoards = function (boards) {
             }
         );
     });
+
+    $($select).click(
+        function (event) {
+            if (options.indexOf(event.target) >= 0) { // TODO: doesn't work :-/
+               var boardid = event.target.value;
+               Trelloviz_onBoardSelected(boardid);
+            }
+        }
+    );
 };
 
 
