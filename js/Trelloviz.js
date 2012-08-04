@@ -26,6 +26,9 @@ var Trelloviz_updateLoggedIn = function () {
     var isLoggedIn = (typeof Trello != "undefined") && Trello.authorized();
     $("#connectButton").toggle(!isLoggedIn);
     $("#disconnectButton, #loggedin").toggle(isLoggedIn);
+
+    $("#selectBoardPanel").toggle(isLoggedIn);
+
 };
 
 var Trelloviz_onAuthorize = function () {
@@ -126,37 +129,42 @@ var Trelloviz_onShowActionForBoard = function (boardId) {
 }
 
 
-var Trelloviz_onBoardSelected = function (boardId) {
-    var $uiwidget = $('<div class="ui-widget">').appendTo("#output");
-    var $btn = $('<a class="btn btn-primary">').text('Show Chart').appendTo($uiwidget);
-
-    $($btn).click(function (event) {
-        Trelloviz_onShowActionForBoard(boardId);
-    });
-
-    // currently no lists to display
-    // Trello.get("boards/" + boardId + "/lists", { cards:"all" }, Trelloviz_showLists);
-}
+//var Trelloviz_onBoardSelected = function (boardId) {
+//    var $uiwidget = $('<div class="ui-widget">').appendTo("#output");
+//    var $btn = $('<a class="btn btn-primary">').text('Show Chart').appendTo($uiwidget);
+//
+//    $($btn).click(function (event) {
+//        Trelloviz_onShowActionForBoard(boardId);
+//    });
+//
+//    // currently no lists to display
+//    // Trello.get("boards/" + boardId + "/lists", { cards:"all" }, Trelloviz_showLists);
+//}
 
 
 var Trelloviz_showBoards = function (boards) {
-    $("#output").empty();
-
-    var $forminline = $('<form class="form-inline">').appendTo("#output");
-    var $controlgroup = $('<div class="control-group">').appendTo($forminline);
-    $('<label>').text('Your boards: ').appendTo($controlgroup);
-    var $controls = $('<div class="controls">').appendTo($controlgroup);
-    var $select = $('<select id="combobox">').appendTo($controls);
 
     var options = [];
+    var selectedBoard = {
+        id : boards[0].id,
+        name : boards[0].name
+    };
+
+    $("#selectBoardCombo").empty();
+
+    $("#btnShowChart").click(function (event) {
+        Trelloviz_onShowActionForBoard(selectedBoard['id']);
+    });
 
     $.each(boards, function (idx, board) {
-        var $opt = $('<option value=' + board.id + '>').text(board.name).appendTo($select);
+        var $opt = $('<option value=' + board.id + '>').text(board.name).appendTo("#selectBoardCombo");
         options.push($opt[0]);
         $($opt).click(
             function (event) {
                 var boardid = event.target.value;
-                Trelloviz_onBoardSelected(boardid);
+                selectedBoard['id'] = boardid;
+                selectedBoard['name'] = event.target.text;
+//                Trelloviz_onBoardSelected(boardid);
             }
         );
     });
@@ -240,6 +248,11 @@ var Trelloviz_showSettings = function () {
 
 
 var Trelloviz_showGraphic = function (viz_data) {
+
+    $("#graphic").empty();
+    $('<div id="viz_container">').appendTo("#graphic");
+    $('<div id="viz_canvas" style="width: 600px; height: 400px;">').appendTo("#viz_container");
+
     var areaChart = new $jit.AreaChart({
         //id of the visualization container
         injectInto:'viz_canvas',
