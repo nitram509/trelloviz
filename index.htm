@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
   <head>
     <meta charset="utf-8">
     <title>Trelloviz (beta)</title>
@@ -21,12 +21,6 @@
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 
-    <!-- Le fav and touch icons -->
-    <!--<link rel="shortcut icon" href="../assets/ico/favicon.ico">-->
-    <!--<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">-->
-    <!--<link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">-->
-    <!--<link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">-->
-    <!--<link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png">-->
   </head>
 
   <body>
@@ -47,7 +41,7 @@
                     <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu btn-small">
-                    <li><a href="#">Settings</a></li>
+                    <li id="menuConfigApiKey"><a href="#">Trello.com API Key</a></li>
                 </ul>
             </div>
             <div class="btn-group pull-right">
@@ -57,13 +51,6 @@
                 </ul>
             </div>
 
-          <div class="nav-collapse">
-            <ul class="nav">
-              <!--<li class="active"><a href="#">Home</a></li>-->
-              <!--<li><a href="#about">About</a></li>-->
-              <!--<li><a href="#contact">Contact</a></li>-->
-            </ul>
-          </div><!--/.nav-collapse -->
         </div>
       </div>
     </div>
@@ -76,7 +63,19 @@
             <p>Trello: logged in as <span id="fullName">Not logged in.</span></p>
         </div>
 
-        <div id="output"></div>
+        <div id="configApiKeyPanel" style="display:none;">
+            <form class="well form-horizontal">
+                <button id="btnCloseConfigApiKeyPanel" class="close" >×</button>
+                <label for="txtTRELLOAPIKEY">Your Trello API Key</label>
+                <input id="txtTRELLOAPIKEY" type="text" class="span4" maxlength="32" placeholder="Enter your 32 letters Trello API key...">
+                <span class="help-block">
+                    This API key is used to connect to trello.com only. It will nowhere saved/stored, but only in <b>your</b> browser.
+                    <br>
+                    You can get it from www.trello.com, logging in, clicking on top left <em>'i'</em>, clicking <em>'more...'</em>,
+                    clicking <em>'API'</em> and the last step is to click on <em>'generate...'</em>.
+                </span>
+            </form>
+        </div>
 
         <div id="selectBoardPanel" style="display:none;">
             <form class="form-inline">
@@ -91,6 +90,8 @@
                 <button id="btnShowChart" class="btn" href="#" >Show Chart</button>
             </form>
         </div>
+
+        <div id="output"></div>
 
         <div id="graphic"> </div>
 
