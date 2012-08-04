@@ -128,13 +128,14 @@ var Trelloviz_onShowActionForBoard = function (boardId) {
 
 var Trelloviz_onBoardSelected = function (boardId) {
     var $uiwidget = $('<div class="ui-widget">').appendTo("#output");
-    var $btn = $('<a class="btn btn-primary">').text('Show Actions').appendTo($uiwidget);
+    var $btn = $('<a class="btn btn-primary">').text('Show Chart').appendTo($uiwidget);
 
     $($btn).click(function (event) {
         Trelloviz_onShowActionForBoard(boardId);
     });
 
-    Trello.get("boards/" + boardId + "/lists", { cards:"all" }, Trelloviz_showLists);
+    // currently no lists to display
+    // Trello.get("boards/" + boardId + "/lists", { cards:"all" }, Trelloviz_showLists);
 }
 
 
@@ -160,14 +161,14 @@ var Trelloviz_showBoards = function (boards) {
         );
     });
 
-    $($select).click(
-        function (event) {
-            if (options.indexOf(event.target) >= 0) { // TODO: doesn't work :-/
-               var boardid = event.target.value;
-               Trelloviz_onBoardSelected(boardid);
-            }
-        }
-    );
+//    $($select).click(
+//        function (event) {
+//            if (options.indexOf(event.target) >= 0) { // TODO: doesn't work :-/
+//               var boardid = event.target.value;
+//               Trelloviz_onBoardSelected(boardid);
+//            }
+//        }
+//    );
 };
 
 
