@@ -20,9 +20,11 @@
  * under the License.
  */
 
+"use strict"; // jshint ;_;
+
 var Trelloviz_Data = new TrellovizData();
 
-var Trelloviz_ensureConfigTextFilled = function() {
+var Trelloviz_ensureConfigTextFilled = function () {
     if (typeof TRELLO_API_KEY != "undefined") {
         $("#txtTRELLOAPIKEY").attr('value', TRELLO_API_KEY);
     }
@@ -37,7 +39,7 @@ var Trelloviz_updateLoggedIn = function () {
 
 };
 
-var Trelloviz_onAuthorizeError = function (arg1,arg2,arg3) {
+var Trelloviz_onAuthorizeError = function (arg1, arg2, arg3) {
 
 };
 
@@ -56,9 +58,9 @@ var Trelloviz_trelloLogin = function (data, textStatus, jqxhr) {
     Trello.authorize({
         interactive:true,
         type:"popup",
-        success: Trelloviz_onAuthorize,
-        error: Trelloviz_onAuthorizeError,
-        expiration: "1days",
+        success:Trelloviz_onAuthorize,
+        //error: Trelloviz_onAuthorizeError,
+        expiration:"1day",
         scope:{ read:true, write:false }
     });
 };
@@ -69,7 +71,7 @@ var Trelloviz_logout = function () {
     Trelloviz_updateLoggedIn();
 };
 
-Trelloviz_getApiKey = function () {
+var Trelloviz_getApiKey = function () {
     var apikey = $("#txtTRELLOAPIKEY").attr('value');
     if (apikey.length == 32) return apikey;
     return null;
@@ -91,7 +93,7 @@ var Trelloviz_bindActions = function () {
 
     $("#disconnectButton").click(Trelloviz_logout);
 
-    $("#menuConfigApiKey,#btnCloseConfigApiKeyPanel").click(function() {
+    $("#menuConfigApiKey,#btnCloseConfigApiKeyPanel").click(function () {
         $("#configApiKeyPanel").toggle();
     });
 
@@ -143,7 +145,7 @@ var Trelloviz_showLists = function (lists) {
 
 
 var Trelloviz_computeAndShow = function (data) {
-    var computed = Trelloviz_Data.computeVizData(data);
+    var computed = Trelloviz_Data.computeVizData_all_lists(data);
     Trelloviz_showGraphic(computed);
 };
 
@@ -170,8 +172,8 @@ var Trelloviz_showBoards = function (boards) {
 
     var options = [];
     var selectedBoard = {
-        id : boards[0].id,
-        name : boards[0].name
+        id:boards[0].id,
+        name:boards[0].name
     };
 
     $("#selectBoardCombo").empty();
@@ -207,7 +209,7 @@ var Trelloviz_showGraphic = function (viz_data) {
 
     $("#graphic").empty();
     $('<div id="viz_container">').appendTo("#graphic");
-    $('<div id="viz_canvas" style="width: 600px; height: 400px;">').appendTo("#viz_container");
+    $('<div id="viz_canvas" style="min-height: 500px;">').appendTo("#viz_container");
 
     var areaChart = new $jit.AreaChart({
         //id of the visualization container
@@ -220,21 +222,27 @@ var Trelloviz_showGraphic = function (viz_data) {
         showLabels:true,
         type:'stacked:gradient',
         //label styling
-        Label:{
-            type:'Native', //can be 'Native' or 'HTML'
-            size:13,
-            family:'monospace',
-            color:'silver'
-        },
+//        Label:{
+//            type:'HTML', //can be 'Native' or 'HTML'
+//            size:5,
+//            family:'monospace',
+//            color:'silver'
+//        },
         //enable tips
         Tips:{
             enable:true,
             onShow:function (tip, elem) {
-                var tt = document.createElement("span");
-                tt.className = "tooltip"
-                tt.innerHTML = "" + elem.name + " " + elem.value;
-                while (tip.hasChildNodes()) tip.removeChild(tip.firstChild);
-                tip.appendChild(tt);
+//                var tt = document.createElement("span");
+//                tt.className = "tooltip"
+//                tt.innerHTML = "" + elem.name + " " + elem.value;
+//                while (tip.hasChildNodes()) tip.removeChild(tip.firstChild);
+//                tip.appendChild(tt);
+                $(tip).empty();
+                $("<span>")
+                    .addClass("label")
+                    .addClass("label-info")
+                    .text("" + elem.name + " (" + elem.value + ")")
+                    .appendTo(tip);
             }
         },
         //add left and right click handlers

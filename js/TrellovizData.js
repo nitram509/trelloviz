@@ -20,70 +20,156 @@
  * under the License.
  */
 
-TrellovizData = function() {
+"requires jQuery"; // just a hint ;-)
+"use strict"; // jshint ;_;
+
+var TrellovizData = function () {
+// placeholder
+}
+
+TrellovizData.prototype = {
+
+    computeVizData_all_lists:function (trelloData) {
+
+        trelloData.sort(function (a, b) {
+            var unixtimestamp_a = Date.parse(a.date);
+            var unixtimestamp_b = Date.parse(b.date);
+            if (unixtimestamp_a < unixtimestamp_b) return -1;
+            if (unixtimestamp_a > unixtimestamp_b) return 1;
+            return 0;
+        });
+
+        var listOrderIds = [];
+        var listOrderNames = [];
+        var counterPerList = {};
+        var cardToListMap = {};
+        var vizDataForJit = {
+            'label':[],
+            'values':[]
+        };
+
+        $.each(trelloData, function (idx, trelloAction) {
+            var unixtimestamp = trelloAction.date;
+
+            var validData = true;
+
+            if (trelloAction.type == 'createCard') {
+                var listid = trelloAction.data.list.id;
+                if (!counterPerList[listid]) {
+                    listOrderIds.push(listid);
+                    listOrderNames.push(trelloAction.data.list.name);
+                }
+                counterPerList[listid] = (counterPerList[listid] || 0) + 1;
+                cardToListMap[trelloAction.data.card.id] = listid;
+            } else if (trelloAction.type == 'updateCard') {
+                if (trelloAction.data.card.closed == true && trelloAction.data.old.closed == false) {
+                    // card archived
+                    counterPerList[cardToListMap[trelloAction.data.card.id]]--;
+                }
+                if (typeof trelloAction.data.listAfter != "undefined"
+                    && trelloAction.data.listBefore != "undefined"
+                    && trelloAction.data.listAfter.id != trelloAction.data.listBefore.id) {
+                    // verschoben
+                    counterPerList[trelloAction.data.listAfter.id]++;
+                    counterPerList[trelloAction.data.listBefore.id]--;
+                }
+            } else {
+                validData = false;
+                console.error(trelloAction.type);
+            }
+
+            if (validData) {
+                var retrievevalues = function () {
+                    var result = [];
+                    $.each(listOrderIds, function (idx, listid) {
+                        result.push(counterPerList[listid]);
+                    });
+                    return result;
+                };
+                vizDataForJit.values.push(
+                    {
+                        'label':unixtimestamp,
+                        'values':retrievevalues()
+                    }
+                );
+            }
+        });
+
+        for (var i=0; i<listOrderNames.length; i++) {
+            vizDataForJit.label.push(listOrderNames[i]);
+        }
+
+        return vizDataForJit;
+    },
+
+
+    /***************************************************
+     *
+     */
+    computeVizData_sequential:function (trelloData) {
+        var vizTimestamps = [];
+        var vizPlan = [];
+        var vizWiP = [];
+        var vizDone = [];
+
+        var idPlan = "500daadf637e1efe2a2348fa";
+        var idWiP = "500daadf637e1efe2a2348fb";
+        var idDone = "500daadf637e1efe2a2348fc";
+
+        var counterPerList = {};
+        var cardToListMap = {};
+
+        counterPerList[idPlan] = 0;
+        counterPerList[idWiP] = 0;
+        counterPerList[idDone] = 0;
+
+        trelloData.sort(function (a, b) {
+            var unixtimestamp_a = Date.parse(a.date);
+            var unixtimestamp_b = Date.parse(b.date);
+            if (unixtimestamp_a < unixtimestamp_b) return -1;
+            if (unixtimestamp_a > unixtimestamp_b) return 1;
+            return 0;
+        });
+
+        var vizDataForJit = {
+            'label':['ToDo', 'WiP', 'Done'],
+            'color':['#ff0000', '#00ff00', '#0000ff'],
+            'values':[]
+        };
+
+        $.each(trelloData, function (idx, trelloAction) {
+            console.info(trelloAction.date);
+            var unixtimestamp = trelloAction.date;// Date.parse(trelloAction.date);
+            console.info(new Date(unixtimestamp));
+
+            if (trelloAction.type == 'createCard') {
+                counterPerList[trelloAction.data.list.id]++;
+                cardToListMap[trelloAction.data.card.id] = trelloAction.data.list.id;
+            } else if (trelloAction.type == 'updateCard') {
+                if (trelloAction.data.card.closed == true && trelloAction.data.old.closed == false) {
+                    counterPerList[cardToListMap[trelloAction.data.card.id]]--;
+                }
+                if (typeof trelloAction.data.listAfter != "undefined"
+                    && trelloAction.data.listBefore != "undefined"
+                    && trelloAction.data.listAfter.id != trelloAction.data.listBefore.id) {
+                    // verschoben
+                    counterPerList[trelloAction.data.listAfter.id]++;
+                    counterPerList[trelloAction.data.listBefore.id]--;
+                }
+            } else {
+                console.info(trelloAction.type);
+            }
+
+            vizDataForJit.values.push(
+                {
+                    'label':unixtimestamp,
+                    'values':[counterPerList[idPlan], counterPerList[idWiP], counterPerList[idDone]]
+                }
+            );
+        });
+
+        return vizDataForJit;
+    }
 
 }
 
-TrellovizData.prototype.computeVizData = function (trelloData) {
-    var vizTimestamps = [];
-    var vizPlan = [];
-    var vizWiP = [];
-    var vizDone = [];
-
-    var idPlan = "500daadf637e1efe2a2348fa";
-    var idWiP = "500daadf637e1efe2a2348fb";
-    var idDone = "500daadf637e1efe2a2348fc";
-
-    var counterPerList = {};
-    var cardToListMap = {};
-
-    counterPerList[idPlan] = 0;
-    counterPerList[idWiP] = 0;
-    counterPerList[idDone] = 0;
-
-    trelloData.sort(function (a, b) {
-        var unixtimestamp_a = Date.parse(a.date);
-        var unixtimestamp_b = Date.parse(b.date);
-        if (unixtimestamp_a < unixtimestamp_b) return -1;
-        if (unixtimestamp_a > unixtimestamp_b) return 1;
-        return 0;
-    });
-
-    var vizDataForJit = {
-        'label':['ToDo', 'WiP', 'Done'],
-        'values':[]
-    };
-
-    $.each(trelloData, function (idx, trelloAction) {
-        console.info(trelloAction.date);
-        var unixtimestamp = trelloAction.date;// Date.parse(trelloAction.date);
-        console.info(new Date(unixtimestamp));
-
-        if (trelloAction.type == 'createCard') {
-            counterPerList[trelloAction.data.list.id]++;
-            cardToListMap[trelloAction.data.card.id] = trelloAction.data.list.id;
-        } else if (trelloAction.type == 'updateCard') {
-            if (trelloAction.data.card.closed == true && trelloAction.data.old.closed == false) {
-                counterPerList[cardToListMap[trelloAction.data.card.id]]--;
-            }
-            if (typeof trelloAction.data.listAfter != "undefined"
-                && trelloAction.data.listBefore != "undefined"
-                && trelloAction.data.listAfter.id != trelloAction.data.listBefore.id) {
-                // verschoben
-                counterPerList[trelloAction.data.listAfter.id]++;
-                counterPerList[trelloAction.data.listBefore.id]--;
-            }
-        } else {
-            console.info(trelloAction.type);
-        }
-
-        vizDataForJit.values.push(
-            {
-                'label':unixtimestamp,
-                'values':[counterPerList[idPlan], counterPerList[idWiP],counterPerList[idDone]]
-            }
-        );
-    });
-
-    return vizDataForJit;
-};
