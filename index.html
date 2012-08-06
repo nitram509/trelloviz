@@ -1,71 +1,106 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen"/>
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen"/>
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print"/>
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-    <title>Trelloviz by nitram509</title>
-  </head>
+    <title>Trelloviz (beta) by nitram509</title>
+</head>
 
-  <body>
-    <div id="container">
-      <div class="inner">
+<body>
+<div id="container">
+    <div class="inner">
 
         <header>
-          <h1>Trelloviz</h1>
-          <h2>Some fancy visualizations for Trello.com boards. Most likely only useful, if you're doing Kanban ;-)</h2>
+            <h1>Trelloviz</h1>
+
+            <h2>Some fancy visualizations for Trello.com boards. Most likely only useful, if you're doing Kanban
+                ;-)</h2>
         </header>
 
-        <section id="downloads" class="clearfix">
-          <a href="https://github.com/nitram509/trelloviz/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
-          <a href="https://github.com/nitram509/trelloviz/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
-          <a href="https://github.com/nitram509/trelloviz" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        <section id="main_content_part1">
+
+            <h3>Welcome to Trelloviz.</h3>
+
+            <p>
+                Since a few weeks, I'm a happy employee (switched employer) and working
+                in a team, practicing the Agile manifest. In detail, we're using Kanban
+                as our primary software development methodology.
+            </p>
+
+            <p>
+                For organizing our lists and cards we're using <a href="http://www.trello.com">Trello</a>,
+                which is a great tool (and peace of software).
+                For getting a better feedback on how the flow is constant or not,
+                there are some metrics out there. One of them is the
+                <a href="http://lmgtfy.com/?q=cumulative+flow+diagram">cumulative flow diagram</a>.
+            </p>
+
+            <p style="text-align: center">
+                <img class="img-polaroid" src="images/screenshot.jpg" alt="A sample screenshot of the Trelloviz prototype" title="A sample screenshot of the Trelloviz prototype">
+            </p>
+
+            <p>
+                This project aims to visualize your flow, by using the Trello API to retrieving your card
+                and list usage. In theory, all information can be extracted out of this actions over a given
+                time span.
+            </p>
+
         </section>
 
         <hr>
 
-        <section id="main_content">
-          <h3>Welcome to GitHub Pages.</h3>
+        <section id="live_demo" class="clearfix">
+            <a href="demo/index.htm" id="live-demo" class="button"><span>Live-Demo</span></a>
+        </section>
 
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
+        <hr>
 
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
-</code></pre>
+        <section id="main_content_part2">
 
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
+            <h3>Thanks to ...</h3>
 
-<h3>Designer Templates</h3>
+            <p>
+                Thanks to the work of <a href="https://github.com/philogb" class="user-mention">@philogb</a>
+                and providing the great <a href="http://thejit.org/">JavaScript InfoVis Toolkit</a>,
+                the graphics looking so good :-)
+            </p>
 
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
+            <h3>License</h3>
 
-<h3>Rather Drive Stick?</h3>
+            <p>
+                Apache License v2.0 (<a href="http://www.apache.org/licenses/LICENSE-2.0">details</a>)
+            </p>
+        </section>
 
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
+        <hr>
 
-<h3>Authors and Contributors</h3>
-
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
-
-<h3>Support or Contact</h3>
-
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
+        <section id="downloads" class="clearfix">
+            <a href="https://github.com/nitram509/trelloviz/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+            <a href="https://github.com/nitram509/trelloviz/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+            <a href="https://github.com/nitram509/trelloviz" id="view-on-github"
+               class="button"><span>View on GitHub</span></a>
         </section>
 
         <footer>
-          Trelloviz is maintained by <a href="https://github.com/nitram509">nitram509</a><br>
-          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="http://twitter.com/jasonlong">Jason Long</a>.
+            <a href="https://github.com/nitram509/trelloviz"><img
+                    style="position: absolute; top: 0; right: 0; border: 0;"
+                    src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"
+                    alt="Fork me on GitHub"></a>
+
+            Trelloviz is maintained by <a href="https://github.com/nitram509">nitram509</a><br>
+            This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a
+                href="http://twitter.com/jasonlong">Jason Long</a>.
         </footer>
 
-        
-      </div>
+
     </div>
-  </body>
+</div>
+</body>
 </html>
