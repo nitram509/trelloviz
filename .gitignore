@@ -1,4 +1,5 @@
 trello_api_key.js 
-/.settings
-/libs
-/.project
+test/js/actions.js
+target
+
+
