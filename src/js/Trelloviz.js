@@ -22,8 +22,6 @@
 
 "use strict"; // jshint ;_;
 
-var Trelloviz_Data = new TrellovizData();
-
 var Trelloviz_ensureConfigTextFilled = function () {
     if (typeof TRELLO_API_KEY != "undefined") {
         $("#txtTRELLOAPIKEY").attr('value', TRELLO_API_KEY);
@@ -145,7 +143,8 @@ var Trelloviz_showLists = function (lists) {
 
 
 var Trelloviz_computeAndShow = function (data) {
-    var computed = Trelloviz_Data.computeVizData_all_lists(data);
+    var trellovizData = new TrellovizData();
+    var computed = trellovizData.computeVizData_all_lists(data);
     Trelloviz_showGraphic(computed);
 };
 
