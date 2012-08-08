@@ -20,7 +20,6 @@
  * under the License.
  */
 
-"requires jQuery"; // just a hint ;-)
 "use strict"; // jshint ;_;
 
 var TrellovizData = function () {
@@ -29,78 +28,127 @@ var TrellovizData = function () {
 
 TrellovizData.prototype = {
 
-    computeVizData_all_lists:function (trelloData) {
+    listOrderIds:[],
+    listOrderNames:[],
+    counterPerList:{},
+    cardToListMap:{},
+    vizDataForJit:{
+        'label':[],
+        'values':[]
+    },
 
-        trelloData.sort(function (a, b) {
+    init:function () {
+        this.listOrderIds = [];
+        this.listOrderNames = [];
+        this.counterPerList = {};
+        this.cardToListMap = {};
+        this.vizDataForJit = { 'label':[], 'values':[] }
+    },
+
+    computeVizData_all_lists:function (trelloActionData) {
+
+        this.init();
+
+        this.sortTrelloDataByDateAscending(trelloActionData);
+
+        for (var idx = 0; idx < trelloActionData.length; idx++) {
+            this.processSingleTrelloActionRecord(idx, trelloActionData[idx]);
+        }
+
+        this.retrieveLabelNamesFromList();
+
+        return this.vizDataForJit;
+    },
+
+    sortTrelloDataByDateAscending:function (trelloActionData) {
+        trelloActionData.sort(function (a, b) {
             var unixtimestamp_a = Date.parse(a.date);
             var unixtimestamp_b = Date.parse(b.date);
             if (unixtimestamp_a < unixtimestamp_b) return -1;
             if (unixtimestamp_a > unixtimestamp_b) return 1;
             return 0;
         });
+    },
 
-        var listOrderIds = [];
-        var listOrderNames = [];
-        var counterPerList = {};
-        var cardToListMap = {};
-        var vizDataForJit = {
-            'label':[],
-            'values':[]
-        };
+    actionArchiveCard:function (trelloActionRecord) {
+        this.counterPerList[this.cardToListMap[trelloActionRecord.data.card.id]]--;
+    },
 
-        $.each(trelloData, function (idx, trelloAction) {
-            var unixtimestamp = trelloAction.date;
+    actionCreateCard:function (trelloActionRecord) {
+        var listid = trelloActionRecord.data.list.id;
+        this.ensureListIsRegistered(trelloActionRecord.data.list);
+        this.counterPerList[listid]++;
+        this.cardToListMap[trelloActionRecord.data.card.id] = listid;
+    },
 
-            var validData = true;
+    ensureListIsRegistered:function (listIdAndName) {
+        if (!this.counterPerList[listIdAndName.id]) {
+            this.counterPerList[listIdAndName.id] = 0;
+            this.listOrderIds.push(listIdAndName.id);
+            this.listOrderNames.push(listIdAndName.name);
+        }
+    },
 
-            if (trelloAction.type == 'createCard') {
-                var listid = trelloAction.data.list.id;
-                if (!counterPerList[listid]) {
-                    listOrderIds.push(listid);
-                    listOrderNames.push(trelloAction.data.list.name);
-                }
-                counterPerList[listid] = (counterPerList[listid] || 0) + 1;
-                cardToListMap[trelloAction.data.card.id] = listid;
-            } else if (trelloAction.type == 'updateCard') {
-                if (trelloAction.data.card.closed == true && trelloAction.data.old.closed == false) {
-                    // card archived
-                    counterPerList[cardToListMap[trelloAction.data.card.id]]--;
-                }
-                if (typeof trelloAction.data.listAfter != "undefined"
-                    && trelloAction.data.listBefore != "undefined"
-                    && trelloAction.data.listAfter.id != trelloAction.data.listBefore.id) {
-                    // verschoben
-                    counterPerList[trelloAction.data.listAfter.id]++;
-                    counterPerList[trelloAction.data.listBefore.id]--;
-                }
-            } else {
-                validData = false;
-                console.error(trelloAction.type);
+    actionMoveCard:function (trelloActionRecord) {
+        var listidBefore = trelloActionRecord.data.listBefore.id;
+        var listidAfter = trelloActionRecord.data.listAfter.id;
+
+        this.ensureListIsRegistered(trelloActionRecord.data.listBefore);
+        this.ensureListIsRegistered(trelloActionRecord.data.listAfter);
+
+        if (this.counterPerList[listidBefore] <= 0) {
+            // there must be one!
+            this.counterPerList[listidBefore] = 1;
+            var idx = this.listOrderIds.indexOf(listidBefore); // TODO: https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Array/indexOf
+            // also increase all values before
+            for (var i = this.vizDataForJit.values.length - 1; i >= 0; i--) {
+                this.vizDataForJit.values[i].values[idx] = (this.vizDataForJit.values[i].values[idx] || 0) + 1;
             }
+        }
+        this.counterPerList[listidBefore]--;
+        this.counterPerList[listidAfter]++;
+    },
 
-            if (validData) {
-                var retrievevalues = function () {
-                    var result = [];
-                    $.each(listOrderIds, function (idx, listid) {
-                        result.push(counterPerList[listid]);
-                    });
-                    return result;
-                };
-                vizDataForJit.values.push(
-                    {
-                        'label':unixtimestamp,
-                        'values':retrievevalues()
-                    }
-                );
+    processSingleTrelloActionRecord:function (recordIndex, trelloActionRecord) {
+        var unixtimestamp = trelloActionRecord.date;
+
+        var validData = false;
+
+        if (trelloActionRecord.type == 'createCard') {
+            validData = true;
+            this.actionCreateCard(trelloActionRecord);
+        } else if (trelloActionRecord.type == 'updateCard') {
+            if (trelloActionRecord.data.card.closed == true && trelloActionRecord.data.old.closed == false) {
+                validData = true;
+                this.actionArchiveCard(trelloActionRecord);
             }
-        });
-
-        for (var i=0; i<listOrderNames.length; i++) {
-            vizDataForJit.label.push(listOrderNames[i]);
+            if ((trelloActionRecord.data.listAfter || false) && (trelloActionRecord.data.listBefore || false)) {
+                validData = true;
+                this.actionMoveCard(trelloActionRecord);
+            }
+        } else {
+            console.error(trelloActionRecord.type);
         }
 
-        return vizDataForJit;
-    }
+        if (validData) {
+            var valueRowWithNaturalOrder = [];
+            for (var i = 0; i < this.listOrderIds.length; i++) {
+                var listid = this.listOrderIds[i];
+                valueRowWithNaturalOrder.push(this.counterPerList[listid]);
+            }
+            this.vizDataForJit.values.push(
+                {
+                    'label':unixtimestamp,
+                    'values':valueRowWithNaturalOrder
+                }
+            );
+        }
+    },
 
+    retrieveLabelNamesFromList:function () {
+        for (var i = 0; i < this.listOrderNames.length; i++) {
+            this.vizDataForJit.label.push(this.listOrderNames[i]);
+        }
+    }
 }
 
