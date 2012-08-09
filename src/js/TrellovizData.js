@@ -57,7 +57,18 @@ TrellovizData.prototype = {
 
         this.retrieveLabelNamesFromList();
 
+        this.cleanupNullValues();
+
         return this.vizDataForJit;
+    },
+
+    cleanupNullValues:function () {
+        this.vizDataForJit.values.forEach(function (element, index, outerarray) {
+                for (var i= 0,len=element.values.length; i<len; i++) {
+                    element.values[i] = (element.values[i] || 0);
+                }
+            },
+            this);
     },
 
     sortTrelloDataByDateAscending:function (trelloActionData) {
