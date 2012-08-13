@@ -14,5 +14,6 @@ http://nitram509.github.com/trelloviz/
 Follow and contribute
 ---------------------
 There's a public visible Trello board, 
-https://trello.com/board/trelloviz-development/502972ab1982d7c71d0681b7 .
+https://trello.com/board/trelloviz-development/502972ab1982d7c71d0681b7
+
 You're invited to send feedback, bugs, suggestions and more ... 
