@@ -4,9 +4,11 @@
     <meta charset="utf-8">
     <title>Trelloviz (beta)</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Trelloviz - Some fancy visualizations for Trello.com boards. Most likely only useful, if you're doing Kanban ;-)">
+    <meta name="description"
+          content="Trelloviz - Some fancy visualizations for Trello.com boards. Most likely only useful, if you're doing Kanban ;-)">
     <meta name="author" content="Martin W. Kirst">
-    <meta name="keywords" content="trello, completion rate, time tracking, statistics, lead time, cumulative flow diagram">
+    <meta name="keywords"
+          content="trello, completion rate, time tracking, statistics, lead time, cumulative flow diagram">
 
     <!-- Le styles -->
     <link href="assets/css/bootstrap.css" rel="stylesheet">
@@ -59,24 +61,31 @@
 <div class="container">
 
 
-    <div id="loggedin" class="alert alert-success pull-right">
-        <button class="close fade in out" data-dismiss="alert" href="#">×</button>
+    <div id="loggedin" class="alert alert-success pull-right" style="display: none">
+        <button id="btnCloseLoginInformation" class="close fade" href="#">×</button>
         <p>Trello: logged in as <span id="fullName">Not logged in.</span></p>
     </div>
 
     <div id="configApiKeyPanel" style="display:none;">
+
+
         <form class="well form-horizontal">
-            <button id="btnCloseConfigApiKeyPanel" class="close">×</button>
-            <label for="txtTRELLOAPIKEY">Your Trello API Key</label>
-            <input id="txtTRELLOAPIKEY" type="text" class="span4" maxlength="32"
-                   placeholder="Enter your 32 letters Trello API key...">
+            <fieldset>
+                <button id="btnCloseConfigApiKeyPanel" class="close fade" href="#">×</button>
+                <div class="control-group">
+                    <label for="txtTRELLOAPIKEY">Your Trello API Key</label>
+                    <input id="txtTRELLOAPIKEY" type="text" class="span4" maxlength="32"
+                           placeholder="Enter your 32 letters Trello API key...">
+                </div>
                 <span class="help-block">
                     This API key is used to connect to trello.com only. It will nowhere saved/stored, but only in <b>your</b> browser.
                     <br>
                     You can get it from www.trello.com, logging in, clicking on top left <em>'i'</em>, clicking <em>'more...'</em>,
                     clicking <em>'API'</em> and the last step is to click on <em>'generate...'</em>.
                 </span>
-        </form>
+            </fieldset>
+    </form>
+
     </div>
 
     <div id="selectBoardPanel" style="display:none;">

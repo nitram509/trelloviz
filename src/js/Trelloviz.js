@@ -31,14 +31,11 @@ var Trelloviz_ensureConfigTextFilled = function () {
 var Trelloviz_updateLoggedIn = function () {
     var isLoggedIn = (typeof Trello != "undefined") && Trello.authorized();
     $("#connectButton").toggle(!isLoggedIn);
-    $("#disconnectButton, #loggedin").toggle(isLoggedIn);
-
+    $("#disconnectButton").toggle(isLoggedIn);
     $("#selectBoardPanel").toggle(isLoggedIn);
-
-};
-
-var Trelloviz_onAuthorizeError = function (arg1, arg2, arg3) {
-
+    if (isLoggedIn) {
+        $("#loggedin").fadeIn().delay(1500).fadeOut();
+    }
 };
 
 var Trelloviz_onAuthorize = function () {
@@ -51,13 +48,16 @@ var Trelloviz_onAuthorize = function () {
     Trello.get("members/me/boards", {}, Trelloviz_showBoards);
 };
 
+var Trelloviz_onAuthorizeError = function () {
+    Trelloviz_updateLoggedIn();
+};
 
 var Trelloviz_trelloLogin = function (data, textStatus, jqxhr) {
     Trello.authorize({
         interactive:true,
         type:"popup",
         success:Trelloviz_onAuthorize,
-        //error: Trelloviz_onAuthorizeError,
+        error: Trelloviz_onAuthorizeError,
         expiration:"1day",
         scope:{ read:true, write:false }
     });
@@ -79,20 +79,26 @@ var Trelloviz_bindActions = function () {
 
     Trelloviz_ensureConfigTextFilled();
 
-    //$( "#dialog-form" ).dialog({ autoOpen: false });
-
-//    $("#settingsButton").button().click(function(){
-//        $( "#dialog-form" ).dialog( "open" );
-//    });
-
     $("#connectButton").click(function () {
-        jQuery.getScript('https://api.trello.com/1/client.js?key=' + Trelloviz_getApiKey(), Trelloviz_trelloLogin);
+        var apikey = Trelloviz_getApiKey();
+        if (apikey != null && apikey.length==32) {
+            $("#txtTRELLOAPIKEY").parent(".control-group").removeClass("error");
+            $("#configApiKeyPanel").fadeOut();
+            jQuery.getScript('https://api.trello.com/1/client.js?key=' + apikey, Trelloviz_trelloLogin);
+        } else {
+            $("#txtTRELLOAPIKEY").parent(".control-group").addClass("error");
+            $("#configApiKeyPanel").fadeIn();
+        }
     });
 
     $("#disconnectButton").click(Trelloviz_logout);
 
     $("#menuConfigApiKey,#btnCloseConfigApiKeyPanel").click(function () {
+        $("#txtTRELLOAPIKEY").parent(".control-group").removeClass("error");
         $("#configApiKeyPanel").toggle();
+    });
+    $("#btnCloseLoginInformation").click(function() {
+        $("#loggedin").fadeOut();
     });
 
     Trelloviz_updateLoggedIn();
