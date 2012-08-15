@@ -82,7 +82,21 @@ TrellovizData.prototype = {
     },
 
     actionArchiveCard:function (trelloActionRecord) {
-        this.counterPerList[this.cardToListMap[trelloActionRecord.data.card.id]]--;
+        var listid = this.cardToListMap[trelloActionRecord.data.card.id];
+        if (listid || false) {
+            if (this.counterPerList[listid] <= 0) {
+                // there must be one!
+                this.counterPerList[listid] = 1;
+                var idx = this.listOrderIds.indexOf(listid); // TODO: https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Array/indexOf
+                // also increase all values before
+                for (var i = this.vizDataForJit.values.length - 1; i >= 0; i--) {
+                    this.vizDataForJit.values[i].values[idx] = (this.vizDataForJit.values[i].values[idx] || 0) + 1;
+                }
+            }
+            this.counterPerList[listid]--;
+            return true;
+        }
+        return false;
     },
 
     actionCreateCard:function (trelloActionRecord) {
@@ -118,6 +132,7 @@ TrellovizData.prototype = {
         }
         this.counterPerList[listidBefore]--;
         this.counterPerList[listidAfter]++;
+        this.cardToListMap[trelloActionRecord.data.card.id] = listidAfter;
     },
 
     processSingleTrelloActionRecord:function (recordIndex, trelloActionRecord) {
@@ -125,18 +140,48 @@ TrellovizData.prototype = {
 
         var validData = false;
 
-        if (trelloActionRecord.type == 'createCard') {
+        var actions = {};
+
+        var ignoreAction = function() {};
+
+        actions['addMemberToCard'] = ignoreAction;
+        actions['removeMemberFromCard'] = ignoreAction;
+        actions['addChecklistToCard'] = ignoreAction;
+        actions['copyCard'] = ignoreAction;
+        actions['updateCheckItemStateOnCard'] = ignoreAction;
+        actions['updateBoard'] = ignoreAction;
+        actions['commentCard'] = ignoreAction;
+        actions['moveCardFromBoard'] = ignoreAction;
+        actions['convertToCardFromCheckItem'] = ignoreAction;
+        actions['addAttachmentToCard'] = ignoreAction;
+        actions['removeChecklistFromCard'] = ignoreAction;
+        actions['updateChecklist'] = ignoreAction;
+
+        actions['createList'] = function() {
+            this.ensureListIsRegistered(trelloActionRecord.data.list);
+        }
+
+        actions['moveCardToBoard'] = function() {
+            validData = this.actionArchiveCard(trelloActionRecord);
+        }
+
+        actions['createCard'] = function() {
             validData = true;
             this.actionCreateCard(trelloActionRecord);
-        } else if (trelloActionRecord.type == 'updateCard') {
+        }
+
+        actions['updateCard'] = function() {
             if (trelloActionRecord.data.card.closed == true && trelloActionRecord.data.old.closed == false) {
-                validData = true;
-                this.actionArchiveCard(trelloActionRecord);
+                validData = this.actionArchiveCard(trelloActionRecord);
             }
             if ((trelloActionRecord.data.listAfter || false) && (trelloActionRecord.data.listBefore || false)) {
                 validData = true;
                 this.actionMoveCard(trelloActionRecord);
             }
+        }
+
+        if (actions[trelloActionRecord.type]) {
+            actions[trelloActionRecord.type].call(this);
         } else {
             console.error(trelloActionRecord.type);
         }
