@@ -22,12 +22,36 @@
 
 "use strict"; // jshint ;_;
 
+if (typeof Trelloviz == 'undefined') {
+    var Trelloviz = function() {  };
+}
+
+Trelloviz.viewModel = {
+    apiKey : ko.observable(''),
+    loggedIn : ko.observable(false),
+
+    showConfigPanel : ko.observable(false),
+    toggleConfigApiKeyPanelVisible : function() {
+        var visible = Trelloviz.viewModel.showConfigPanel();
+        Trelloviz.viewModel.showConfigPanel(!visible);
+    },
+
+    actionLogIn : function() {
+        console.log("Login");
+    },
+
+    actionLogOut : function() {
+        console.log("Logout");
+    }
+}
+
 var Trelloviz_ensureConfigTextFilled = function () {
     if (typeof TRELLO_API_KEY != "undefined") {
         $("#txtTRELLOAPIKEY").attr('value', TRELLO_API_KEY);
     }
 }
 
+// @Deprecated
 var Trelloviz_updateLoggedIn = function () {
     var isLoggedIn = (typeof Trello != "undefined") && Trello.authorized();
     $("#connectButton").toggle(!isLoggedIn);
@@ -82,19 +106,16 @@ var Trelloviz_bindActions = function () {
     $("#connectButton").click(function () {
         var apikey = Trelloviz_getApiKey();
         if (apikey != null && apikey.length==32) {
-            $("#txtTRELLOAPIKEY").parent(".control-group").removeClass("error");
             $("#configApiKeyPanel").fadeOut();
             jQuery.getScript('https://api.trello.com/1/client.js?key=' + apikey, Trelloviz_trelloLogin);
         } else {
-            $("#txtTRELLOAPIKEY").parent(".control-group").addClass("error");
             $("#configApiKeyPanel").fadeIn();
         }
     });
 
     $("#disconnectButton").click(Trelloviz_logout);
 
-    $("#menuConfigApiKey,#btnCloseConfigApiKeyPanel").click(function () {
-        $("#txtTRELLOAPIKEY").parent(".control-group").removeClass("error");
+    $("#menuConfigApiKey").click(function () {
         $("#configApiKeyPanel").toggle();
     });
     $("#btnCloseLoginInformation").click(function() {
@@ -160,19 +181,6 @@ var Trelloviz_onShowActionForBoard = function (boardId) {
 }
 
 
-//var Trelloviz_onBoardSelected = function (boardId) {
-//    var $uiwidget = $('<div class="ui-widget">').appendTo("#output");
-//    var $btn = $('<a class="btn btn-primary">').text('Show Chart').appendTo($uiwidget);
-//
-//    $($btn).click(function (event) {
-//        Trelloviz_onShowActionForBoard(boardId);
-//    });
-//
-//    // currently no lists to display
-//    // Trello.get("boards/" + boardId + "/lists", { cards:"all" }, Trelloviz_showLists);
-//}
-
-
 var Trelloviz_showBoards = function (boards) {
 
     var options = [];
@@ -200,14 +208,6 @@ var Trelloviz_showBoards = function (boards) {
         );
     });
 
-//    $($select).click(
-//        function (event) {
-//            if (options.indexOf(event.target) >= 0) { // TODO: doesn't work :-/
-//               var boardid = event.target.value;
-//               Trelloviz_onBoardSelected(boardid);
-//            }
-//        }
-//    );
 };
 
 var Trelloviz_showGraphic = function (viz_data) {

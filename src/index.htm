@@ -44,13 +44,13 @@
                     <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu btn-small">
-                    <li id="menuConfigApiKey"><a href="#">Configure Trello API Key</a></li>
+                    <li id="menuConfigApiKey"><a href="#" data-bind="click: toggleConfigApiKeyPanelVisible">Configure Trello API Key</a></li>
                 </ul>
             </div>
             <div class="btn-group pull-right">
                 <ul>
-                    <button id="connectButton" class="btn btn-primary">Log Into Trello</button>
-                    <button id="disconnectButton" class="btn" style="display: none;">Logout</button>
+                    <button id="connectButton" class="btn btn-primary" data-bind="visible: loggedIn() == false, click: actionLogIn">Log Into Trello</button>
+                    <button id="disconnectButton" class="btn" style="display: none;" data-bind="visible: loggedIn, click: actionLogOut">Logout</button>
                 </ul>
             </div>
 
@@ -66,16 +66,15 @@
         <p>Trello: logged in as <span id="fullName">Not logged in.</span></p>
     </div>
 
-    <div id="configApiKeyPanel" style="display:none;">
+    <div id="configApiKeyPanel" style="display:none;" data-bind="visible: showConfigPanel">
 
 
         <form class="well form-horizontal">
             <fieldset>
-                <button id="btnCloseConfigApiKeyPanel" class="close fade" href="#">×</button>
-                <div class="control-group">
+                <button id="btnCloseConfigApiKeyPanel" class="close fade" href="#" data-bind="click: toggleConfigApiKeyPanelVisible">×</button>
+                <div class="control-group" data-bind="css:{ error: apiKey().length != 32 }">
                     <label for="txtTRELLOAPIKEY">Your Trello API Key</label>
-                    <input id="txtTRELLOAPIKEY" type="text" class="span4" maxlength="32"
-                           placeholder="Enter your 32 letters Trello API key...">
+                    <input id="txtTRELLOAPIKEY" type="text" class="span4" maxlength="32" data-bind="value: apiKey" placeholder="Enter your 32 letters Trello API key..." >
                 </div>
                 <span class="help-block">
                     This API key is used to connect to trello.com only. It will nowhere saved/stored, but only in <b>your</b> browser.
@@ -88,7 +87,7 @@
 
     </div>
 
-    <div id="selectBoardPanel" style="display:none;">
+    <div id="selectBoardPanel" style="display:none;" data-bind="visible: loggedIn">
         <form class="form-inline">
                 <span class="control-group">
                     <label class="control-label" for="selectBoardCombo">Select list</label>
@@ -109,19 +108,23 @@
 </div>
 <!-- /container -->
 
-<script src="assets/js/jquery.js"></script>
-<script src="assets/js/bootstrap-dropdown.js"></script>
+<script src="assets/js/jquery.js" type="text/javascript"></script>
+<script src="assets/js/bootstrap-dropdown.js" type="text/javascript"></script>
+<script src="assets/js/jit.js" type="text/javascript"></script>
+<script src="assets/js/knockout.js" type="text/javascript"></script>
 
-<script src="assets/js/jit.js"></script>
+<script src="/trello_api_key.js"><!-- /* change this, for your local installations */ --></script>
 
-<script src="/trello_api_key.js"></script>
-<!-- change this, for your local installations -->
 
 <script src="js/TrellovizData.js"></script>
 <script src="js/Trelloviz.js"></script>
 
 <script type="text/javascript">
-    Trelloviz_bindActions();
+    ko.applyBindings(Trelloviz.viewModel);
+</script>
+
+<script type="text/javascript">
+    //Trelloviz_bindActions();
 </script>
 
 </body>
