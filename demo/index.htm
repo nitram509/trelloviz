@@ -16,6 +16,12 @@
     body {
       padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
     }
+
+    .popup-top-right {
+      position: absolute;
+      right: 25px;
+      top: auto;
+    }
   </style>
   <link href="assets/css/bootstrap-responsive.css" rel="stylesheet">
 
@@ -44,7 +50,8 @@
           <span class="caret"></span>
         </a>
         <ul class="dropdown-menu btn-small">
-          <li id="menuConfigApiKey"><a href="#" data-bind="click: toggleConfigApiKeyPanelVisible">Configure Trello API Key</a>
+          <li id="menuConfigApiKey"><a href="#" data-bind="click: toggleConfigApiKeyPanelVisible">Configure
+            Trello API Key</a>
           </li>
         </ul>
       </div>
@@ -61,25 +68,26 @@
   </div>
 </div>
 
+<div id="loggedin" class="alert alert-success popup-top-right" style="display: none">
+  <button class="close fade" href="#" data-bind="click: function(){$('#loggedin').fadeOut();}">×</button>
+  <p>Trello: logged in as</p>
+
+  <p data-bind="text: fullTrelloUserName"></p>
+</div>
+
 <div class="container-fluid">
 
 
   <div class="row-fluid">
-    <div id="loggedin" class="alert alert-success pull-right" style="display: none">
-      <button class="close fade" href="#" data-bind="click: function(){$('#loggedin').fadeOut();}">×</button>
-      <p>Trello: logged in as</p>
-
-      <p data-bind="text: fullTrelloUserName"></p>
-    </div>
-
     <div id="configApiKeyPanel" class="span7" style="display:none;" data-bind="visible: showConfigPanel">
       <form class="well form-horizontal">
         <fieldset>
-          <button id="btnCloseConfigApiKeyPanel" class="close fade" href="#" data-bind="click: toggleConfigApiKeyPanelVisible">×
+          <button id="btnCloseConfigApiKeyPanel" class="close fade" href="#"
+                  data-bind="click: toggleConfigApiKeyPanelVisible">×
           </button>
           <div class="control-group" data-bind="css:{ error: apiKey().length != 32 }">
             <label for="txtTRELLOAPIKEY">Your Trello API Key</label>
-            <input id="txtTRELLOAPIKEY" type="text" class="span4" maxlength="32" data-bind="value: apiKey"
+            <input id="txtTRELLOAPIKEY" type="text" class="span11" maxlength="32" data-bind="value: apiKey"
                    placeholder="Enter your 32 letters Trello API key...">
           </div>
                 <span class="help-block">
@@ -91,17 +99,20 @@
         </fieldset>
       </form>
     </div>
+  </div>
 
-    <div id="selectBoardPanel" style="display:none;" data-bind="visible: loggedIn">
+  <div class="row-fluid">
+
+    <div id="selectBoardPanel" class="span11" style="display:none;" data-bind="visible: loggedIn">
       <form class="form-inline">
-                <span class="control-group">
-                    <label class="control-label" for="selectBoardCombo">Select list</label>
-                    <span class="controls">
-                        <select id="selectBoardCombo">
+        <span class="control-group">
+            <label class="control-label" for="selectBoardCombo">Select list</label>
+            <span class="controls">
+                <select id="selectBoardCombo">
 
-                        </select>
-                    </span>
-                </span>
+                </select>
+            </span>
+        </span>
         <button id="btnShowChart" class="btn" href="#">Show Chart</button>
       </form>
     </div>
@@ -109,21 +120,19 @@
   </div>
 
   <div class="row-fluid">
+    <div class="span11" id="graphic" style="min-height: 700px"></div>
 
-    <div class="span2" id="listPanel" data-bind="visible: loggedIn">
-
+    <div class="span1 pull-right" id="listPanel" data-bind="visible: loggedIn">
       <script type="text/html" id="listnames-template">
         <p>
-          <i class="icon-list"></i>
+          <i class="icon-list" data-bind="style: {backgroundColor:color}"></i>
           <span data-bind="text: name"><!-- NAME --></span>
         </p>
       </script>
-
-      <div class="sidebar-nav" data-bind="template: {name: 'listnames-template', foreach: trelloLists}">
+      <div data-bind="template: {name: 'listnames-template', foreach: trelloLists}">
       </div>
     </div>
 
-    <div class="span10" id="graphic" style="min-height: 500px;"></div>
 
   </div>
 
@@ -141,28 +150,31 @@
 <script type="text/javascript">
   ko.applyBindings(Trelloviz.viewModel);
 </script>
+
 <script type="text/javascript">
-        // <![CDATA[
-        if ("http:" == document.location.protocol) {
-            document.write(unescape("%3Cscript src='" + (("https:" == document.location.protocol) ? "http://cdn.betaeasy.com" : "http://cdn.betaeasy.com") + "/betaeasy.js' type='text/javascript'%3E%3C/script%3E"))
-        }
-        // ]]>
-    </script>
-    <script type="text/javascript">
-        // <![CDATA[
-        try {
-            BetaEasy.init({
-                betaId: '1073',
-                styleType: 'new',
-                buttonAlign: 'right',
-                language: 'en',
-                buttonBackgroundColor: '#f00',
-                buttonMouseHoverBackgroundColor: '#06C',
-                buttonImageActive: 'en/newbtn-5.png',
-                buttonImageHover: 'none'
-            });
-        } catch(err) {}
-        // ]]>
-    </script>
+    // <![CDATA[
+    if ("http:" == document.location.protocol) {
+        document.write(unescape("%3Cscript src='" + (("https:" == document.location.protocol) ? "http://cdn.betaeasy.com" : "http://cdn.betaeasy.com") + "/betaeasy.js' type='text/javascript'%3E%3C/script%3E"))
+    }
+    // ]]>
+</script>
+<script type="text/javascript">
+    // <![CDATA[
+    try {
+        BetaEasy.init({
+            betaId: '1073',
+            styleType: 'new',
+            buttonAlign: 'right',
+            language: 'en',
+            buttonBackgroundColor: '#f00',
+            buttonMouseHoverBackgroundColor: '#06C',
+            buttonImageActive: 'en/newbtn-5.png',
+            buttonImageHover: 'none'
+        });
+    } catch(err) {}
+    // ]]>
+</script>
+
+
 </body>
 </html>
