@@ -166,8 +166,8 @@ var Trelloviz_showBoards = function (boards) {
 var Trelloviz_showGraphic = function (viz_data) {
 
   $("#graphic").empty();
-  $('<div id="viz_container">').appendTo("#graphic");
-  $('<div id="viz_canvas" style="min-height: 500px;">').appendTo("#viz_container");
+  $('<div id="viz_container" style="min-height: 700px">').appendTo("#graphic");
+  $('<div id="viz_canvas" style="min-height: 700px">').appendTo("#viz_container");
 
   var areaChart = new $jit.AreaChart({
                                        //id of the visualization container
