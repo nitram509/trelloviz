@@ -49,8 +49,12 @@
         </ul>
       </div>
       <div class="btn-group pull-right">
-        <button id="connectButton" class="btn btn-primary" data-bind="visible: loggedIn() == false, click: actionLogIn">Log Into Trello</button>
-        <button id="disconnectButton" class="btn" style="display: none;"data-bind="visible: loggedIn, click: actionLogOut">Logout</button>
+        <button id="connectButton" class="btn btn-primary"
+                data-bind="visible: loggedIn() == false, click: actionLogIn">Log Into Trello
+        </button>
+        <button id="disconnectButton" class="btn" style="display: none;"
+                data-bind="visible: loggedIn, click: actionLogOut">Logout
+        </button>
       </div>
 
     </div>
@@ -105,9 +109,22 @@
   </div>
 
   <div class="row-fluid">
-    <div id="output"></div>
 
-    <div id="graphic" style="width:inherit;min-height: 500px;"></div>
+    <div class="span2" id="listPanel" data-bind="visible: loggedIn">
+
+      <script type="text/html" id="listnames-template">
+        <p>
+          <i class="icon-list"></i>
+          <span data-bind="text: name"><!-- NAME --></span>
+        </p>
+      </script>
+
+      <div class="sidebar-nav" data-bind="template: {name: 'listnames-template', foreach: trelloLists}">
+      </div>
+    </div>
+
+    <div class="span10" id="graphic" style="min-height: 500px;"></div>
+
   </div>
 
 </div>

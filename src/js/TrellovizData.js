@@ -157,6 +157,7 @@ TrellovizData.prototype = {
         actions['removeChecklistFromCard'] = ignoreAction;
         actions['updateChecklist'] = ignoreAction;
         actions['createBoard'] = ignoreAction;
+        actions['addMemberToBoard'] = ignoreAction;
 
         actions['createList'] = function() {
             this.ensureListIsRegistered(trelloActionRecord.data.list);

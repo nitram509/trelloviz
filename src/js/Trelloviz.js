@@ -31,6 +31,7 @@ Trelloviz.viewModel = {
   apiKey:ko.observable(''),
   loggedIn:ko.observable(false),
   fullTrelloUserName:ko.observable(''),
+  trelloLists:ko.observableArray(),
 
   showConfigPanel:ko.observable(false),
   toggleConfigApiKeyPanelVisible:function () {
@@ -54,21 +55,28 @@ Trelloviz.viewModel = {
     Trello.deauthorize();
   },
 
-  setNewData:function(trellodata) {
+  setNewData:function (trellodata) {
     var trellovizData = new TrellovizData();
     var computed = trellovizData.computeVizData_all_lists(trellodata);
+
+    var lists = [];
+    for (var i = 0; i < trellovizData.listOrderNames.length; i++) {
+      lists.push({name:trellovizData.listOrderNames[i]});
+    }
+    Trelloviz.viewModel.trelloLists(lists);
+
     Trelloviz_showGraphic(computed);
   }
 
 }
 
-Trelloviz.trelloLoadAndShowUserInfo = function() {
+Trelloviz.trelloLoadAndShowUserInfo = function () {
   Trello.members.get("me", function (member) {
     Trelloviz.viewModel.fullTrelloUserName(member.fullName);
   });
 }
 
-Trelloviz.trelloLoadAndShowBoards = function() {
+Trelloviz.trelloLoadAndShowBoards = function () {
   Trello.get("members/me/boards", {}, Trelloviz_showBoards);
 }
 
