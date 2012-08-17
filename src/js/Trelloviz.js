@@ -59,11 +59,8 @@ Trelloviz.viewModel = {
     var trellovizData = new TrellovizData();
     var computed = trellovizData.computeVizData_all_lists(trellodata);
 
-    var lists = [];
-    for (var i = 0; i < trellovizData.listOrderNames.length; i++) {
-      lists.push({name:trellovizData.listOrderNames[i]});
-    }
-    Trelloviz.viewModel.trelloLists(lists);
+    var listsWithNaturalOrder = trellovizData.retrieveListsWithNaturalOrder();
+    Trelloviz.viewModel.trelloLists(listsWithNaturalOrder);
 
     Trelloviz_showGraphic(computed);
   }

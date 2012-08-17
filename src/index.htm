@@ -103,7 +103,7 @@
 
   <div class="row-fluid">
 
-    <div id="selectBoardPanel" class="well span11" style="display:none;" data-bind="visible: loggedIn">
+    <div id="selectBoardPanel" class="span11" style="display:none;" data-bind="visible: loggedIn">
       <form class="form-inline">
         <span class="control-group">
             <label class="control-label" for="selectBoardCombo">Select list</label>
@@ -125,7 +125,7 @@
     <div class="span1 pull-right" id="listPanel" data-bind="visible: loggedIn">
       <script type="text/html" id="listnames-template">
         <p>
-          <i class="icon-list"></i>
+          <i class="icon-list" data-bind="style: {backgroundColor:color}"></i>
           <span data-bind="text: name"><!-- NAME --></span>
         </p>
       </script>

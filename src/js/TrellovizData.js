@@ -29,18 +29,17 @@ var TrellovizData = function () {
 TrellovizData.prototype = {
 
   defaultColors:["#416D9C", "#70A35E", "#EBB056", "#C74243", "#83548B", "#909291", "#557EAA"],
-  listOrderIds:[],
-  listOrderNames:[],
+  listOrder:{}, // name:'name', listIdx:0, color:'#abc', id:'123abc'
   counterPerList:{},
   cardToListMap:{},
   vizDataForJit:{
     'label':[],
-    'values':[]
+    'values':[],
+    'color':[]
   },
 
   init:function () {
-    this.listOrderIds = [];
-    this.listOrderNames = [];
+    this.listOrder = {};
     this.counterPerList = {};
     this.cardToListMap = {};
     this.vizDataForJit = { 'label':[], 'values':[] }
@@ -88,7 +87,7 @@ TrellovizData.prototype = {
       if (this.counterPerList[listid] <= 0) {
         // there must be one!
         this.counterPerList[listid] = 1;
-        var idx = this.listOrderIds.indexOf(listid); // TODO: https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Array/indexOf
+        var idx = this.listOrder[listid].listIdx;
         // also increase all values before
         for (var i = this.vizDataForJit.values.length - 1; i >= 0; i--) {
           this.vizDataForJit.values[i].values[idx] = (this.vizDataForJit.values[i].values[idx] || 0) + 1;
@@ -108,10 +107,10 @@ TrellovizData.prototype = {
   },
 
   ensureListIsRegistered:function (listIdAndName) {
-    if (!this.counterPerList[listIdAndName.id]) {
+    if (!this.listOrder[listIdAndName.id]) {
       this.counterPerList[listIdAndName.id] = 0;
-      this.listOrderIds.push(listIdAndName.id);
-      this.listOrderNames.push(listIdAndName.name);
+      var listIdx = this.sizeOfObject(this.listOrder);
+      this.listOrder[listIdAndName.id] = {name:listIdAndName.name, id:listIdAndName.id, listIdx:listIdx, color:this.defaultColors[listIdx % this.defaultColors.length]};
     }
   },
 
@@ -125,7 +124,7 @@ TrellovizData.prototype = {
     if (this.counterPerList[listidBefore] <= 0) {
       // there must be one!
       this.counterPerList[listidBefore] = 1;
-      var idx = this.listOrderIds.indexOf(listidBefore); // TODO: https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Array/indexOf
+      var idx = this.listOrder[listidBefore].listIdx;
       // also increase all values before
       for (var i = this.vizDataForJit.values.length - 1; i >= 0; i--) {
         this.vizDataForJit.values[i].values[idx] = (this.vizDataForJit.values[i].values[idx] || 0) + 1;
@@ -191,24 +190,45 @@ TrellovizData.prototype = {
     }
 
     if (validData) {
-      var valueRowWithNaturalOrder = [];
-      for (var i = 0; i < this.listOrderIds.length; i++) {
-        var listid = this.listOrderIds[i];
-        valueRowWithNaturalOrder.push(this.counterPerList[listid]);
-      }
       this.vizDataForJit.values.push(
         {
           'label':unixtimestamp,
-          'values':valueRowWithNaturalOrder
+          'values':this.retrieveValueRowWithNaturalOrder()
         }
       );
     }
   },
 
-  retrieveLabelNamesFromList:function () {
-    for (var i = 0; i < this.listOrderNames.length; i++) {
-      this.vizDataForJit.label.push(this.listOrderNames[i]);
+  retrieveValueRowWithNaturalOrder:function () {
+    var valueRowWithNaturalOrder = [];
+    for (var listid in this.listOrder) {
+      var idx = this.listOrder[listid].listIdx;
+      valueRowWithNaturalOrder[idx] = this.counterPerList[listid];
     }
+    return valueRowWithNaturalOrder;
+  },
+
+  retrieveListsWithNaturalOrder:function () {
+    var listsWithNaturalOrder = [];
+    for (var listid in this.listOrder) {
+      var idx = this.listOrder[listid].listIdx;
+      listsWithNaturalOrder[idx] = this.listOrder[listid];
+    }
+    return listsWithNaturalOrder;
+  },
+
+  retrieveLabelNamesFromList:function () {
+    for (var listid in this.listOrder) {
+      var idx = this.listOrder[listid].listIdx;
+      this.vizDataForJit.label[idx] = this.listOrder[listid].name;
+    }
+  },
+
+  sizeOfObject:function (hashmap) {
+    var i = 0;
+    for (var key in hashmap) if (hashmap.hasOwnProperty(key))i++;
+    return i;
   }
+
 }
 
