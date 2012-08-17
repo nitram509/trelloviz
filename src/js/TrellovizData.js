@@ -156,6 +156,7 @@ TrellovizData.prototype = {
         actions['addAttachmentToCard'] = ignoreAction;
         actions['removeChecklistFromCard'] = ignoreAction;
         actions['updateChecklist'] = ignoreAction;
+        actions['createBoard'] = ignoreAction;
 
         actions['createList'] = function() {
             this.ensureListIsRegistered(trelloActionRecord.data.list);
@@ -183,7 +184,7 @@ TrellovizData.prototype = {
         if (actions[trelloActionRecord.type]) {
             actions[trelloActionRecord.type].call(this);
         } else {
-            console.error(trelloActionRecord.type);
+            console.error("missing action, not handled: " trelloActionRecord.type);
         }
 
         if (validData) {

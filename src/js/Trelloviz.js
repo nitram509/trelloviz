@@ -52,21 +52,36 @@ Trelloviz.viewModel = {
   actionLogOut:function () {
     Trelloviz.viewModel.loggedIn(false);
     Trello.deauthorize();
+  },
+
+  setNewData:function(trellodata) {
+    var trellovizData = new TrellovizData();
+    var computed = trellovizData.computeVizData_all_lists(trellodata);
+    Trelloviz_showGraphic(computed);
   }
 
+}
+
+Trelloviz.trelloLoadAndShowUserInfo = function() {
+  Trello.members.get("me", function (member) {
+    Trelloviz.viewModel.fullTrelloUserName(member.fullName);
+  });
+}
+
+Trelloviz.trelloLoadAndShowBoards = function() {
+  Trello.get("members/me/boards", {}, Trelloviz_showBoards);
 }
 
 var Trelloviz_onAuthorize = function () {
   var reallyLoggedIn = (typeof Trello != "undefined") && Trello.authorized();
   Trelloviz.viewModel.loggedIn(reallyLoggedIn);
-  if (reallyLoggedIn) {
-    Trello.members.get("me", function (member) {
-      Trelloviz.viewModel.fullTrelloUserName(member.fullName);
-    });
 
-    Trello.get("members/me/boards", {}, Trelloviz_showBoards);
+  if (reallyLoggedIn) {
+    Trelloviz.trelloLoadAndShowUserInfo();
 
     $('#loggedin').fadeIn().delay(2000).fadeOut(); // TODO: should use Knockout instead of jQuery
+
+    Trelloviz.trelloLoadAndShowBoards();
   }
 };
 
@@ -107,14 +122,8 @@ var Trelloviz_trelloLogin = function (data, textStatus, jqxhr) {
 //  });
 //};
 
-var Trelloviz_computeAndShow = function (data) {
-  var trellovizData = new TrellovizData();
-  var computed = trellovizData.computeVizData_all_lists(data);
-  Trelloviz_showGraphic(computed);
-};
-
 var Trelloviz_onShowActionForBoard = function (boardId) {
-  Trello.get("boards/" + boardId + "/actions", { /* fields:"data,type,date" */ limit:"1000"}, Trelloviz_computeAndShow);
+  Trello.get("boards/" + boardId + "/actions", { /* fields:"data,type,date" */ limit:"1000"}, Trelloviz.viewModel.setNewData);
 }
 
 var Trelloviz_showBoards = function (boards) {
