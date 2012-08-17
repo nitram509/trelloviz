@@ -184,7 +184,7 @@ TrellovizData.prototype = {
         if (actions[trelloActionRecord.type]) {
             actions[trelloActionRecord.type].call(this);
         } else {
-            console.error("missing action, not handled: " trelloActionRecord.type);
+            console.error("missing action, not handled: " + trelloActionRecord.type);
         }
 
         if (validData) {
