@@ -60,6 +60,7 @@ Trelloviz.viewModel = {
     var computed = trellovizData.computeVizData_all_lists(trellodata);
 
     var listsWithNaturalOrder = trellovizData.retrieveListsWithNaturalOrder();
+    listsWithNaturalOrder.reverse(); // looks more friendly ;-)
     Trelloviz.viewModel.trelloLists(listsWithNaturalOrder);
 
     Trelloviz_showGraphic(computed);
