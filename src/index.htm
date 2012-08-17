@@ -62,8 +62,9 @@
 
 
     <div id="loggedin" class="alert alert-success pull-right" style="display: none">
-        <button id="btnCloseLoginInformation" class="close fade" href="#">×</button>
-        <p>Trello: logged in as <span id="fullName">Not logged in.</span></p>
+        <button class="close fade" href="#" data-bind="click: function(){$('#loggedin').fadeOut();}">×</button>
+        <p>Trello: logged in as</p>
+        <p data-bind="text: fullTrelloUserName"></p>
     </div>
 
     <div id="configApiKeyPanel" style="display:none;" data-bind="visible: showConfigPanel">
@@ -121,10 +122,6 @@
 
 <script type="text/javascript">
     ko.applyBindings(Trelloviz.viewModel);
-</script>
-
-<script type="text/javascript">
-    //Trelloviz_bindActions();
 </script>
 
 </body>

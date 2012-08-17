@@ -23,237 +23,173 @@
 "use strict"; // jshint ;_;
 
 if (typeof Trelloviz == 'undefined') {
-    var Trelloviz = function() {  };
+  var Trelloviz = function () {
+  };
 }
 
 Trelloviz.viewModel = {
-    apiKey : ko.observable(''),
-    loggedIn : ko.observable(false),
+  apiKey:ko.observable(''),
+  loggedIn:ko.observable(false),
+  fullTrelloUserName:ko.observable(''),
 
-    showConfigPanel : ko.observable(false),
-    toggleConfigApiKeyPanelVisible : function() {
-        var visible = Trelloviz.viewModel.showConfigPanel();
-        Trelloviz.viewModel.showConfigPanel(!visible);
-    },
+  showConfigPanel:ko.observable(false),
+  toggleConfigApiKeyPanelVisible:function () {
+    var visible = Trelloviz.viewModel.showConfigPanel();
+    Trelloviz.viewModel.showConfigPanel(!visible);
+  },
 
-    actionLogIn : function() {
-        console.log("Login");
-    },
-
-    actionLogOut : function() {
-        console.log("Logout");
+  actionLogIn:function () {
+    var apikey = Trelloviz.viewModel.apiKey();
+    if (apikey != null && apikey.length == 32) {
+      Trelloviz.viewModel.showConfigPanel(false);
+      jQuery.getScript('https://api.trello.com/1/client.js?key=' + apikey, Trelloviz_trelloLogin);
     }
+    else {
+      Trelloviz.viewModel.showConfigPanel(true);
+    }
+  },
+
+  actionLogOut:function () {
+    Trelloviz.viewModel.loggedIn(false);
+    Trello.deauthorize();
+  }
+
 }
-
-var Trelloviz_ensureConfigTextFilled = function () {
-    if (typeof TRELLO_API_KEY != "undefined") {
-        $("#txtTRELLOAPIKEY").attr('value', TRELLO_API_KEY);
-    }
-}
-
-// @Deprecated
-var Trelloviz_updateLoggedIn = function () {
-    var isLoggedIn = (typeof Trello != "undefined") && Trello.authorized();
-    $("#connectButton").toggle(!isLoggedIn);
-    $("#disconnectButton").toggle(isLoggedIn);
-    $("#selectBoardPanel").toggle(isLoggedIn);
-    if (isLoggedIn) {
-        $("#loggedin").fadeIn().delay(1500).fadeOut();
-    }
-};
 
 var Trelloviz_onAuthorize = function () {
-    Trelloviz_updateLoggedIn();
-
+  var reallyLoggedIn = (typeof Trello != "undefined") && Trello.authorized();
+  Trelloviz.viewModel.loggedIn(reallyLoggedIn);
+  if (reallyLoggedIn) {
     Trello.members.get("me", function (member) {
-        $("#fullName").text(member.fullName);
+      Trelloviz.viewModel.fullTrelloUserName(member.fullName);
     });
 
     Trello.get("members/me/boards", {}, Trelloviz_showBoards);
+
+    $('#loggedin').fadeIn().delay(2000).fadeOut(); // TODO: should use Knockout instead of jQuery
+  }
 };
 
 var Trelloviz_onAuthorizeError = function () {
-    Trelloviz_updateLoggedIn();
+  Trelloviz.viewModel.loggedIn(false);
 };
 
 var Trelloviz_trelloLogin = function (data, textStatus, jqxhr) {
-    Trello.authorize({
-        interactive:true,
-        type:"popup",
-        success:Trelloviz_onAuthorize,
-        error: Trelloviz_onAuthorizeError,
-        expiration:"1day",
-        scope:{ read:true, write:false }
-    });
+  Trello.authorize({
+                     interactive:true,
+                     type:"popup",
+                     success:Trelloviz_onAuthorize,
+                     error:Trelloviz_onAuthorizeError,
+                     expiration:"1day",
+                     scope:{ read:true, write:false }
+                   });
 };
 
+//var Trelloviz_onListSelected = function (listId) {
+//  Trello.get("lists/" + listId + "/cards", {}, me.showCards);
+//}
 
-var Trelloviz_logout = function () {
-    Trello.deauthorize();
-    Trelloviz_updateLoggedIn();
-};
-
-var Trelloviz_getApiKey = function () {
-    var apikey = $("#txtTRELLOAPIKEY").attr('value');
-    if (apikey.length == 32) return apikey;
-    return null;
-};
-
-var Trelloviz_bindActions = function () {
-
-    Trelloviz_ensureConfigTextFilled();
-
-    $("#connectButton").click(function () {
-        var apikey = Trelloviz_getApiKey();
-        if (apikey != null && apikey.length==32) {
-            $("#configApiKeyPanel").fadeOut();
-            jQuery.getScript('https://api.trello.com/1/client.js?key=' + apikey, Trelloviz_trelloLogin);
-        } else {
-            $("#configApiKeyPanel").fadeIn();
-        }
-    });
-
-    $("#disconnectButton").click(Trelloviz_logout);
-
-    $("#menuConfigApiKey").click(function () {
-        $("#configApiKeyPanel").toggle();
-    });
-    $("#btnCloseLoginInformation").click(function() {
-        $("#loggedin").fadeOut();
-    });
-
-    Trelloviz_updateLoggedIn();
-};
-
-
-var Trelloviz_showCards = function (cards) {
-    var $uiwidget = $('<div class="ui-widget">').appendTo("#output");
-    $('<p>').text('Your Cards: ').appendTo($uiwidget);
-    $.each(cards, function (idx, card) {
-        $('<p style="padding-left: 2em;">').text(card.name + ' (' + card.id + ')').appendTo($uiwidget);
-    });
-};
-
-
-var Trelloviz_showActions = function (actions) {
-    var $uiwidget = $('<div class="ui-widget">').appendTo("#output");
-    $('<p>').text('All Actions: ').appendTo($uiwidget);
-    var $ul = $('<ul>').appendTo($uiwidget);
-    $.each(actions, function (idx, action) {
-        $('<li>').text(action.type + ' (' + action.date + ')').appendTo($ul);
-    });
-};
-
-
-var Trelloviz_onListSelected = function (listId) {
-    Trello.get("lists/" + listId + "/cards", {}, me.showCards);
-}
-
-
-var Trelloviz_showLists = function (lists) {
-    var $uiwidget = $('<div class="ui-widget">').appendTo("#output");
-    $('<label>').text('Your Lists: ').appendTo($uiwidget);
-    var $select = $('<select id="comboboxLists">').appendTo($uiwidget);
-
-    $("#comboboxLists").combobox({
-            selected:function (event, ui) {
-                var listid = ui.item.value;
-                me.onListSelected(listid);
-            }
-        }
-    );
-
-    $.each(lists, function (idx, list) {
-        $('<option value=' + list.id + '>').text(list.name).appendTo($select);
-    });
-};
-
+//var Trelloviz_showLists = function (lists) {
+//  var $uiwidget = $('<div class="ui-widget">').appendTo("#output");
+//  $('<label>').text('Your Lists: ').appendTo($uiwidget);
+//  var $select = $('<select id="comboboxLists">').appendTo($uiwidget);
+//
+//  $("#comboboxLists").combobox({
+//                                 selected:function (event, ui) {
+//                                   var listid = ui.item.value;
+//                                   me.onListSelected(listid);
+//                                 }
+//                               }
+//  );
+//
+//  $.each(lists, function (idx, list) {
+//    $('<option value=' + list.id + '>').text(list.name).appendTo($select);
+//  });
+//};
 
 var Trelloviz_computeAndShow = function (data) {
-    var trellovizData = new TrellovizData();
-    var computed = trellovizData.computeVizData_all_lists(data);
-    Trelloviz_showGraphic(computed);
+  var trellovizData = new TrellovizData();
+  var computed = trellovizData.computeVizData_all_lists(data);
+  Trelloviz_showGraphic(computed);
 };
 
-
 var Trelloviz_onShowActionForBoard = function (boardId) {
-    Trello.get("boards/" + boardId + "/actions", { /* fields:"data,type,date" */ limit:"1000"}, Trelloviz_computeAndShow);
+  Trello.get("boards/" + boardId + "/actions", { /* fields:"data,type,date" */ limit:"1000"}, Trelloviz_computeAndShow);
 }
-
 
 var Trelloviz_showBoards = function (boards) {
 
-    var options = [];
-    var selectedBoard = {
-        id:boards[0].id,
-        name:boards[0].name
-    };
+  var options = [];
+  var selectedBoard = {
+    id:boards[0].id,
+    name:boards[0].name
+  };
 
-    $("#selectBoardCombo").empty();
+  $("#selectBoardCombo").empty();
 
-    $("#btnShowChart").click(function (event) {
-        Trelloviz_onShowActionForBoard(selectedBoard['id']);
-    });
+  $("#btnShowChart").click(function (event) {
+    Trelloviz_onShowActionForBoard(selectedBoard['id']);
+  });
 
-    $.each(boards, function (idx, board) {
-        var $opt = $('<option value=' + board.id + '>').text(board.name).appendTo("#selectBoardCombo");
-        options.push($opt[0]);
-        $($opt).click(
-            function (event) {
-                var boardid = event.target.value;
-                selectedBoard['id'] = boardid;
-                selectedBoard['name'] = event.target.text;
+  $.each(boards, function (idx, board) {
+    var $opt = $('<option value=' + board.id + '>').text(board.name).appendTo("#selectBoardCombo");
+    options.push($opt[0]);
+    $($opt).click(
+        function (event) {
+          var boardid = event.target.value;
+          selectedBoard['id'] = boardid;
+          selectedBoard['name'] = event.target.text;
 //                Trelloviz_onBoardSelected(boardid);
-            }
-        );
-    });
+        }
+    );
+  });
 
 };
 
 var Trelloviz_showGraphic = function (viz_data) {
 
-    $("#graphic").empty();
-    $('<div id="viz_container">').appendTo("#graphic");
-    $('<div id="viz_canvas" style="min-height: 500px;">').appendTo("#viz_container");
+  $("#graphic").empty();
+  $('<div id="viz_container">').appendTo("#graphic");
+  $('<div id="viz_canvas" style="min-height: 500px;">').appendTo("#viz_container");
 
-    var areaChart = new $jit.AreaChart({
-        //id of the visualization container
-        injectInto:'viz_canvas',
-        //add animations
-        animate:true,
-        Margin:{ top:5, left:5, right:5, bottom:5 },
-        labelOffset:10,
-        showAggregates:true,
-        showLabels:true,
-        type:'stacked:gradient',
-        //label styling
+  var areaChart = new $jit.AreaChart({
+                                       //id of the visualization container
+                                       injectInto:'viz_canvas',
+                                       //add animations
+                                       animate:true,
+                                       Margin:{ top:5, left:5, right:5, bottom:5 },
+                                       labelOffset:10,
+                                       showAggregates:true,
+                                       showLabels:true,
+                                       type:'stacked:gradient',
+                                       //label styling
 //        Label:{
 //            type:'HTML', //can be 'Native' or 'HTML'
 //            size:5,
 //            family:'monospace',
 //            color:'silver'
 //        },
-        //enable tips
-        Tips:{
-            enable:true,
-            onShow:function (tip, elem) {
+                                       //enable tips
+                                       Tips:{
+                                         enable:true,
+                                         onShow:function (tip, elem) {
 //                var tt = document.createElement("span");
 //                tt.className = "tooltip"
 //                tt.innerHTML = "" + elem.name + " " + elem.value;
 //                while (tip.hasChildNodes()) tip.removeChild(tip.firstChild);
 //                tip.appendChild(tt);
-                $(tip).empty();
-                $("<span>")
-                    .addClass("label")
-                    .addClass("label-info")
-                    .text("" + elem.name + " (" + elem.value + ")")
-                    .appendTo(tip);
-            }
-        },
-        //add left and right click handlers
-        filterOnClick:false,
-        restoreOnRightClick:true
-    });
-    areaChart.loadJSON(viz_data);
+                                           $(tip).empty();
+                                           $("<span>")
+                                               .addClass("label")
+                                               .addClass("label-info")
+                                               .text("" + elem.name + " (" + elem.value + ")")
+                                               .appendTo(tip);
+                                         }
+                                       },
+                                       //add left and right click handlers
+                                       filterOnClick:false,
+                                       restoreOnRightClick:true
+                                     });
+  areaChart.loadJSON(viz_data);
 };
 
