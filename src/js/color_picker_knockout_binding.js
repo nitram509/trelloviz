@@ -29,7 +29,7 @@ if (typeof ko != 'undefined') {
     init:function (element, valueAccessor, allBindingsAccessor, viewModel) {
       var value = valueAccessor();
       $(element).val(ko.utils.unwrapObservable(value));
-      $(element).colorPicker({onColorChange:function (elementId, newColorValue) {
+      $(element).colorPicker({onColorChange: function(elementId, newColorValue) {
         value(newColorValue);
       }});
     },
@@ -39,9 +39,3 @@ if (typeof ko != 'undefined') {
   }
 }
 
-ko.extenders.logChange = function(target, option) {
-  target.subscribe(function(newValue) {
-    console.log(option + ": " + newValue);
-  });
-  return target;
-};
