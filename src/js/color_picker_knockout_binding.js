@@ -29,7 +29,7 @@ if (typeof ko != 'undefined') {
     init:function (element, valueAccessor, allBindingsAccessor, viewModel) {
       var value = valueAccessor();
       $(element).val(ko.utils.unwrapObservable(value));
-      $(element).colorPicker({onColorChange:function (elementId, newColorValue) {
+      $(element).colorPicker({onColorChange: function(elementId, newColorValue) {
         value(newColorValue);
         Trelloviz.viewModel.actionListsUpdated(); // TODO: bad hack, chalenge: how to update view model?
       }});
