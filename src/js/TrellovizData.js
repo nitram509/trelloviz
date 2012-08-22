@@ -38,16 +38,14 @@ TrellovizData.prototype = {
     'color':[]
   },
 
-  init:function () {
-    this.listOrder = {};
-    this.counterPerList = {};
-    this.cardToListMap = {};
-    this.vizDataForJit = { 'label':[], 'values':[] }
-  },
+//  init:function () {
+//    this.listOrder = {};
+//    this.counterPerList = {};
+//    this.cardToListMap = {};
+//    this.vizDataForJit = { 'label':[], 'values':[] }
+//  },
 
   computeVizData_all_lists:function (trelloActionData) {
-
-    this.init();
 
     this.sortTrelloDataByDateAscending(trelloActionData);
 
@@ -192,8 +190,8 @@ TrellovizData.prototype = {
     if (validData) {
       this.vizDataForJit.values.push(
         {
-          'label':unixtimestamp,
-          'values':this.retrieveValueRowWithNaturalOrder()
+          label  : unixtimestamp,
+          values : this.retrieveValueRowWithNaturalOrder()
         }
       );
     }
@@ -221,6 +219,7 @@ TrellovizData.prototype = {
     for (var listid in this.listOrder) {
       var idx = this.listOrder[listid].listIdx;
       this.vizDataForJit.label[idx] = this.listOrder[listid].name;
+      this.vizDataForJit.color[idx] = this.defaultColors[idx % this.defaultColors.length];
     }
   },
 
