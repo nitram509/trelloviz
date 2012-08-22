@@ -33,6 +33,8 @@ Trelloviz.viewModel = {
   fullTrelloUserName:ko.observable(''),
   trelloLists:ko.observableArray(),
 
+  vizDataForJit : null,
+
   showConfigPanel:ko.observable(false),
   toggleConfigApiKeyPanelVisible:function () {
     var visible = Trelloviz.viewModel.showConfigPanel();
@@ -57,13 +59,32 @@ Trelloviz.viewModel = {
 
   setNewData:function (trellodata) {
     var trellovizData = new TrellovizData();
-    var computed = trellovizData.computeVizData_all_lists(trellodata);
+    var computedData = trellovizData.computeVizData_all_lists(trellodata);
 
     var listsWithNaturalOrder = trellovizData.retrieveListsWithNaturalOrder();
     listsWithNaturalOrder.reverse(); // looks more friendly ;-)
+
+    this.vizDataForJit = computedData;
+    var areaChart = Trelloviz_showGraphic(computedData);
+
+    // make colors observable for changing it via color picker
+
+    var onChange = function(target, option, x, y, z) {
+      for (var i=0; i<this.trelloLists.length; i++) {
+        this.vizDataForJit.color[i] = this.trelloLists()[i].color;
+      }
+      areaChart.updateJSON(computedData);
+      return target;
+    }
+
+   listsWithNaturalOrder.forEach(function(item) {item.color = ko.observable(item.color).extend({logChange:onChange})});
+    // TODO: better use this construct:
+//    self.contacts = ko.observableArray(ko.utils.arrayMap(contacts, function(contact) {
+//      return { firstName: contact.firstName, lastName: contact.lastName, phones: ko.observableArray(contact.phones) };
+//    }));
+
     Trelloviz.viewModel.trelloLists(listsWithNaturalOrder);
 
-    Trelloviz_showGraphic(computed);
   }
 
 }
@@ -206,5 +227,7 @@ var Trelloviz_showGraphic = function (viz_data) {
                                        restoreOnRightClick:true
                                      });
   areaChart.loadJSON(viz_data);
+
+  return areaChart;
 };
 
