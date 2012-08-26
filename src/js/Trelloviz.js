@@ -34,12 +34,27 @@ Trelloviz.viewModel = {
   fullTrelloUserName:ko.observable(''),
   trelloLists:ko.observableArray(),
 
-  vizDataForJit : null,
+  areaChart : null,
+  vizDataForJit:null,
 
   showConfigPanel:ko.observable(false),
   toggleConfigApiKeyPanelVisible:function () {
     var visible = Trelloviz.viewModel.showConfigPanel();
     Trelloviz.viewModel.showConfigPanel(!visible);
+  },
+
+  actionListsUpdated:function() {
+    this.updateVizDataFromTrelloListsSettings();
+    this.areaChart.loadJSON(this.vizDataForJit);
+  },
+
+  updateVizDataFromTrelloListsSettings:function() {
+    var trellolists = this.trelloLists();
+    var jitdata = this.vizDataForJit;
+    var index=trellolists.length;
+    while(index--) {
+      jitdata.color[index] = trellolists[index].color();
+    }
   },
 
   actionLogIn:function () {
@@ -60,33 +75,16 @@ Trelloviz.viewModel = {
 
   setNewData:function (trellodata) {
     Trelloviz.viewModel.showSpinner(false);
+
+    // core computing ...
     var trellovizData = new TrellovizData();
-    var computedData = trellovizData.computeVizData_all_lists(trellodata);
-
-    var listsWithNaturalOrder = trellovizData.retrieveListsWithNaturalOrder();
-    listsWithNaturalOrder.reverse(); // looks more friendly ;-)
-
-    this.vizDataForJit = computedData;
-    var areaChart = Trelloviz_showGraphic(computedData);
+    this.vizDataForJit = trellovizData.computeVizData_all_lists(trellodata);;
+    this.areaChart = Trelloviz_showGraphic(this.vizDataForJit);
 
     // make colors observable for changing it via color picker
-
-    var onChange = function(target, option, x, y, z) {
-      for (var i=0; i<this.trelloLists.length; i++) {
-        this.vizDataForJit.color[i] = this.trelloLists()[i].color;
-      }
-      areaChart.updateJSON(computedData);
-      return target;
-    }
-
-   listsWithNaturalOrder.forEach(function(item) {item.color = ko.observable(item.color).extend({logChange:onChange})});
-    // TODO: better use this construct:
-//    self.contacts = ko.observableArray(ko.utils.arrayMap(contacts, function(contact) {
-//      return { firstName: contact.firstName, lastName: contact.lastName, phones: ko.observableArray(contact.phones) };
-//    }));
-
+    var listsWithNaturalOrder = trellovizData.retrieveListsWithNaturalOrder();
+    listsWithNaturalOrder.forEach(function (item) {item.color = ko.observable(item.color)});
     Trelloviz.viewModel.trelloLists(listsWithNaturalOrder);
-
   }
 
 }
@@ -126,13 +124,13 @@ var Trelloviz_onAuthorizeError = function () {
 var Trelloviz_trelloLogin = function (data, textStatus, jqxhr) {
   Trelloviz.viewModel.showSpinner(true);
   Trello.authorize({
-                     interactive:true,
-                     type:"popup",
-                     success:Trelloviz_onAuthorize,
-                     error:Trelloviz_onAuthorizeError,
-                     expiration:"1day",
-                     scope:{ read:true, write:false }
-                   });
+    interactive:true,
+    type:"popup",
+    success:Trelloviz_onAuthorize,
+    error:Trelloviz_onAuthorizeError,
+    expiration:"1day",
+    scope:{ read:true, write:false }
+  });
 };
 
 //var Trelloviz_onListSelected = function (listId) {
@@ -180,12 +178,12 @@ var Trelloviz_showBoards = function (boards) {
     var $opt = $('<option value=' + board.id + '>').text(board.name).appendTo("#selectBoardCombo");
     options.push($opt[0]);
     $($opt).click(
-        function (event) {
-          var boardid = event.target.value;
-          selectedBoard['id'] = boardid;
-          selectedBoard['name'] = event.target.text;
+      function (event) {
+        var boardid = event.target.value;
+        selectedBoard['id'] = boardid;
+        selectedBoard['name'] = event.target.text;
 //                Trelloviz_onBoardSelected(boardid);
-        }
+      }
     );
   });
 
@@ -198,43 +196,43 @@ var Trelloviz_showGraphic = function (viz_data) {
   $('<div id="viz_canvas" style="min-height: 700px">').appendTo("#viz_container");
 
   var areaChart = new $jit.AreaChart({
-                                       //id of the visualization container
-                                       injectInto:'viz_canvas',
-                                       //add animations
-                                       animate:true,
-                                       Margin:{ top:5, left:5, right:5, bottom:5 },
-                                       labelOffset:10,
-                                       showAggregates:true,
-                                       showLabels:true,
-                                       type:'stacked:gradient',
-                                       //label styling
+    //id of the visualization container
+    injectInto:'viz_canvas',
+    //add animations
+    animate:true,
+    Margin:{ top:5, left:5, right:5, bottom:5 },
+    labelOffset:10,
+    showAggregates:true,
+    showLabels:true,
+    type:'stacked:gradient',
+    //label styling
 //        Label:{
 //            type:'HTML', //can be 'Native' or 'HTML'
 //            size:5,
 //            family:'monospace',
 //            color:'silver'
 //        },
-                                       //enable tips
-                                       Tips:{
-                                         enable:true,
-                                         onShow:function (tip, elem) {
+    //enable tips
+    Tips:{
+      enable:true,
+      onShow:function (tip, elem) {
 //                var tt = document.createElement("span");
 //                tt.className = "tooltip"
 //                tt.innerHTML = "" + elem.name + " " + elem.value;
 //                while (tip.hasChildNodes()) tip.removeChild(tip.firstChild);
 //                tip.appendChild(tt);
-                                           $(tip).empty();
-                                           $("<span>")
-                                               .addClass("label")
-                                               .addClass("label-info")
-                                               .text("" + elem.name + " (" + elem.value + ")")
-                                               .appendTo(tip);
-                                         }
-                                       },
-                                       //add left and right click handlers
-                                       filterOnClick:false,
-                                       restoreOnRightClick:true
-                                     });
+        $(tip).empty();
+        $("<span>")
+          .addClass("label")
+          .addClass("label-info")
+          .text("" + elem.name + " (" + elem.value + ")")
+          .appendTo(tip);
+      }
+    },
+    //add left and right click handlers
+    filterOnClick:false,
+    restoreOnRightClick:true
+  });
   areaChart.loadJSON(viz_data);
 
   return areaChart;
