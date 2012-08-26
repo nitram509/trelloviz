@@ -38,13 +38,6 @@ TrellovizData.prototype = {
     'color':[]
   },
 
-//  init:function () {
-//    this.listOrder = {};
-//    this.counterPerList = {};
-//    this.cardToListMap = {};
-//    this.vizDataForJit = { 'label':[], 'values':[] }
-//  },
-
   computeVizData_all_lists:function (trelloActionData) {
 
     this.sortTrelloDataByDateAscending(trelloActionData);
@@ -124,7 +117,8 @@ TrellovizData.prototype = {
       this.counterPerList[listidBefore] = 1;
       var idx = this.listOrder[listidBefore].listIdx;
       // also increase all values before
-      for (var i = this.vizDataForJit.values.length - 1; i >= 0; i--) {
+      var i = this.vizDataForJit.values.length - 1;
+      while (i--) {
         this.vizDataForJit.values[i].values[idx] = (this.vizDataForJit.values[i].values[idx] || 0) + 1;
       }
     }
