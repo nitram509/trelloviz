@@ -35,7 +35,7 @@
 
 <body>
 
-<div class="navbar navbar-fixed-top">
+<div class="navbar navbar-inverse navbar-fixed-top">
   <div class="navbar-inner">
     <div class="container-fluid">
       <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
@@ -46,7 +46,14 @@
       <a class="brand" href="#">Trelloviz (beta)</a>
 
       <div class="pull-right">
-        <a class="btn dropdown-toggle btn-small" data-toggle="dropdown" href="#">
+        <span id="loadingSpinner" data-bind="visible: showSpinner" style="display: none"><img src="assets/img/roller.gif" alt="loading data from Trello ..." title="loading data from Trello ..."></span>
+        <button id="connectButton" class="btn btn-small btn-primary"
+                data-bind="visible: loggedIn() == false, click: actionLogIn">Log Into Trello
+        </button>
+        <button id="disconnectButton" class="btn btn-small" style="display: none;"
+                data-bind="visible: loggedIn, click: actionLogOut">Logout
+        </button>
+        <a class="btn btn-small dropdown-toggle" data-toggle="dropdown" href="#">
           <i class="icon-wrench"></i> Settings
           <span class="caret"></span>
         </a>
@@ -55,15 +62,6 @@
             Trello API Key</a>
           </li>
         </ul>
-      </div>
-      <div class="pull-right">
-        <div id="loadingSpinner" class="btn-group pull-left" data-bind="visible: showSpinner" style="display: none"><img src="assets/img/roller.gif" alt="loading data from Trello ..." title="loading data from Trello ..."></div>
-        <button id="connectButton" class="btn btn-primary"
-                data-bind="visible: loggedIn() == false, click: actionLogIn">Log Into Trello
-        </button>
-        <button id="disconnectButton" class="btn" style="display: none;"
-                data-bind="visible: loggedIn, click: actionLogOut">Logout
-        </button>
       </div>
 
     </div>
