@@ -78,8 +78,8 @@ Trelloviz.viewModel = {
 
     // core computing ...
     var trellovizData = new TrellovizData();
-    this.vizDataForJit = trellovizData.computeVizData_all_lists(trellodata);;
-    this.areaChart = Trelloviz_showGraphic(this.vizDataForJit);
+    Trelloviz.viewModel.vizDataForJit = trellovizData.computeVizData_all_lists(trellodata);
+    Trelloviz.viewModel.areaChart = Trelloviz_showGraphic(Trelloviz.viewModel.vizDataForJit);
 
     // make colors observable for changing it via color picker
     var listsWithNaturalOrder = trellovizData.retrieveListsWithNaturalOrder();
