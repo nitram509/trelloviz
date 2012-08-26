@@ -30,6 +30,7 @@ if (typeof Trelloviz == 'undefined') {
 Trelloviz.viewModel = {
   apiKey:ko.observable(''),
   loggedIn:ko.observable(false),
+  showSpinner:ko.observable(false),
   fullTrelloUserName:ko.observable(''),
   trelloLists:ko.observableArray(),
 
@@ -56,6 +57,7 @@ Trelloviz.viewModel = {
   },
 
   setNewData:function (trellodata) {
+    Trelloviz.viewModel.showSpinner(false);
     var trellovizData = new TrellovizData();
     var computed = trellovizData.computeVizData_all_lists(trellodata);
 
@@ -69,16 +71,20 @@ Trelloviz.viewModel = {
 }
 
 Trelloviz.trelloLoadAndShowUserInfo = function () {
+  this.viewModel.showSpinner(true);
   Trello.members.get("me", function (member) {
     Trelloviz.viewModel.fullTrelloUserName(member.fullName);
+    this.viewModel.showSpinner(false);
   });
 }
 
 Trelloviz.trelloLoadAndShowBoards = function () {
+  this.viewModel.showSpinner(true);
   Trello.get("members/me/boards", {}, Trelloviz_showBoards);
 }
 
 var Trelloviz_onAuthorize = function () {
+  Trelloviz.viewModel.showSpinner(false);
   var reallyLoggedIn = (typeof Trello != "undefined") && Trello.authorized();
   Trelloviz.viewModel.loggedIn(reallyLoggedIn);
 
@@ -93,9 +99,11 @@ var Trelloviz_onAuthorize = function () {
 
 var Trelloviz_onAuthorizeError = function () {
   Trelloviz.viewModel.loggedIn(false);
+  Trelloviz.viewModel.showSpinner(false);
 };
 
 var Trelloviz_trelloLogin = function (data, textStatus, jqxhr) {
+  Trelloviz.viewModel.showSpinner(true);
   Trello.authorize({
                      interactive:true,
                      type:"popup",
@@ -129,11 +137,12 @@ var Trelloviz_trelloLogin = function (data, textStatus, jqxhr) {
 //};
 
 var Trelloviz_onShowActionForBoard = function (boardId) {
+  Trelloviz.viewModel.showSpinner(true);
   Trello.get("boards/" + boardId + "/actions", { /* fields:"data,type,date" */ limit:"1000"}, Trelloviz.viewModel.setNewData);
 }
 
 var Trelloviz_showBoards = function (boards) {
-
+  Trelloviz.viewModel.showSpinner(false);
   var options = [];
   var selectedBoard = {
     id:boards[0].id,
