@@ -38,6 +38,5 @@ if (typeof ko != 'undefined') {
       $(element).val(ko.utils.unwrapObservable(valueAccessor()));
     }
   }
-
 }
 
