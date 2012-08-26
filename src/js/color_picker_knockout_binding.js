@@ -41,9 +41,3 @@ if (typeof ko != 'undefined') {
 
 }
 
-ko.extenders.logChange = function(target, option) {
-  target.subscribe(function(newValue) {
-    console.log(option + ": " + newValue);
-  });
-  return target;
-};
