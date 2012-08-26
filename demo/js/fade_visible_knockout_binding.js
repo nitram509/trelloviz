@@ -21,22 +21,20 @@
  */
 
 /**
- * Sample usage: <input type="text" data-bind="colorPicker:color" />
+ * Sample usage: <input type="text" data-bind="fadeVisible:myViewmodel" />
  */
 
 if (typeof ko != 'undefined') {
-  ko.bindingHandlers.colorPicker = {
-    init:function (element, valueAccessor, allBindingsAccessor, viewModel) {
-      var value = valueAccessor();
-      $(element).val(ko.utils.unwrapObservable(value));
-      $(element).colorPicker({onColorChange:function (elementId, newColorValue) {
-        value(newColorValue);
-        Trelloviz.viewModel.actionListsUpdated(); // TODO: bad hack, chalenge: how to update view model?
-      }});
+  ko.bindingHandlers.fadeVisible = {
+    init:function (element, valueAccessor) {
+      // Start visible/invisible according to initial value
+      var shouldDisplay = valueAccessor();
+      $(element).toggle(shouldDisplay);
     },
-    update:function (element, valueAccessor, allBindingsAccessor, viewModel) {
-      $(element).val(ko.utils.unwrapObservable(valueAccessor()));
+    update:function (element, valueAccessor) {
+      // On update, fade in/out
+      var shouldDisplay = valueAccessor();
+      shouldDisplay ? $(element).fadeIn() : $(element).fadeOut();
     }
-  }
+  };
 }
-

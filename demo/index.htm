@@ -45,7 +45,7 @@
       </a>
       <a class="brand" href="#">Trelloviz (beta)</a>
 
-      <div class="btn-group pull-right">
+      <div class="pull-right">
         <a class="btn dropdown-toggle btn-small" data-toggle="dropdown" href="#">
           <i class="icon-wrench"></i> Settings
           <span class="caret"></span>
@@ -56,7 +56,8 @@
           </li>
         </ul>
       </div>
-      <div class="btn-group pull-right">
+      <div class="pull-right">
+        <div id="loadingSpinner" class="btn-group pull-left" data-bind="visible: showSpinner" style="display: none"><img src="assets/img/roller.gif" alt="loading data from Trello ..." title="loading data from Trello ..."></div>
         <button id="connectButton" class="btn btn-primary"
                 data-bind="visible: loggedIn() == false, click: actionLogIn">Log Into Trello
         </button>
@@ -123,15 +124,15 @@
   <div class="row-fluid">
     <div class="span11" id="graphic" style="min-height: 700px"></div>
 
-    <div class="span1 pull-right" id="listPanel" data-bind="visible: loggedIn">
+    <div id="listPanel_for_grap_legend" class="span1 pull-right" data-bind="visible: loggedIn">
       <script type="text/html" id="listnames-template">
-        <p>
-          <i class="icon-list" data-bind="colorPicker:color"></i>
-          <span data-bind="text: name"><!-- NAME --></span>
-        </p>
+        <li>
+          <i class="icon-list" data-bind="colorPicker:$data.color"></i>
+          <span data-bind="text: $data.name"><!-- NAME --></span>
+        </li>
       </script>
-      <div data-bind="template: {name: 'listnames-template', foreach: trelloLists}">
-      </div>
+      <ul data-bind="template: {name: 'listnames-template', foreach: trelloLists}" class="unstyled">
+      </ul>
     </div>
 
 
@@ -144,6 +145,7 @@
 <script src="assets/js/jquery.colorPicker.js" type="text/javascript"></script>
 <script src="assets/js/bootstrap-dropdown.js" type="text/javascript"></script>
 <script src="assets/js/jit.js" type="text/javascript"></script>
+
 <script src="assets/js/knockout.js" type="text/javascript"></script>
 
 <script src="js/TrellovizData.js"></script>
