@@ -45,7 +45,7 @@
       </a>
       <a class="brand" href="#">Trelloviz (beta)</a>
 
-      <div class="btn-group pull-right">
+      <div class="pull-right">
         <a class="btn dropdown-toggle btn-small" data-toggle="dropdown" href="#">
           <i class="icon-wrench"></i> Settings
           <span class="caret"></span>
@@ -56,7 +56,7 @@
           </li>
         </ul>
       </div>
-      <div class="btn-group pull-right">
+      <div class="pull-right">
         <div id="loadingSpinner" class="btn-group pull-left" data-bind="visible: showSpinner" style="display: none"><img src="assets/img/roller.gif" alt="loading data from Trello ..." title="loading data from Trello ..."></div>
         <button id="connectButton" class="btn btn-primary"
                 data-bind="visible: loggedIn() == false, click: actionLogIn">Log Into Trello
@@ -126,13 +126,13 @@
 
     <div class="span1 pull-right" id="listPanel" data-bind="visible: loggedIn">
       <script type="text/html" id="listnames-template">
-        <p>
+        <li>
           <i class="icon-list" data-bind="colorPicker:color"></i>
           <span data-bind="text: name"><!-- NAME --></span>
-        </p>
+        </li>
       </script>
-      <div data-bind="template: {name: 'listnames-template', foreach: trelloLists}">
-      </div>
+      <ul data-bind="template: {name: 'listnames-template', foreach: trelloLists}" class="unstyled">
+      </ul>
     </div>
 
 
