@@ -23,8 +23,7 @@
 "use strict"; // jshint ;_;
 
 if (typeof Trelloviz == 'undefined') {
-  var Trelloviz = function () {
-  };
+  var Trelloviz = function () { };
 }
 
 Trelloviz.viewModel = {
@@ -33,6 +32,7 @@ Trelloviz.viewModel = {
   showSpinner:ko.observable(false),
   fullTrelloUserName:ko.observable(''),
   trelloLists:ko.observableArray(),
+  html5LocalStorageAvailable:ko.observable(false),
 
   areaChart : null,
   vizDataForJit:null,
@@ -71,6 +71,10 @@ Trelloviz.viewModel = {
   actionLogOut:function () {
     Trelloviz.viewModel.loggedIn(false);
     Trello.deauthorize();
+  },
+
+  actionSaveApiKeyToLocalStorage:function() {
+    localStorage.trelloviz_api_key = this.apiKey();
   },
 
   setNewData:function (trellodata) {
@@ -238,3 +242,12 @@ var Trelloviz_showGraphic = function (viz_data) {
   return areaChart;
 };
 
+// load API KEY from local HTML5 storage
+(function() {
+  if (typeof(Storage) !== "undefined") {
+    Trelloviz.viewModel.html5LocalStorageAvailable(true);
+    if (localStorage.trelloviz_api_key) {
+      Trelloviz.viewModel.apiKey(localStorage.trelloviz_api_key);
+    }
+  }
+})();
