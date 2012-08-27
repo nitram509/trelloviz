@@ -117,7 +117,7 @@ TrellovizData.prototype = {
       this.counterPerList[listidBefore] = 1;
       var idx = this.listOrder[listidBefore].listIdx;
       // also increase all values before
-      var i = this.vizDataForJit.values.length - 1;
+      var i = Math.max(0, this.vizDataForJit.values.length - 1);
       while (i--) {
         this.vizDataForJit.values[i].values[idx] = (this.vizDataForJit.values[i].values[idx] || 0) + 1;
       }
