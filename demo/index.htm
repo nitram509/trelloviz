@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/html">
+<html lang="en" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
 <head>
   <meta charset="utf-8">
   <title>Trelloviz (beta)</title>
@@ -11,7 +11,7 @@
         content="trello, completion rate, time tracking, statistics, lead time, cumulative flow diagram">
 
   <!-- Le styles -->
-  <link href="assets/css/bootstrap.css" rel="stylesheet" />
+  <link href="assets/css/bootstrap.css" rel="stylesheet"/>
   <style>
     body {
       padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
@@ -23,8 +23,8 @@
       top: auto;
     }
   </style>
-  <link href="assets/css/bootstrap-responsive.css" rel="stylesheet" />
-  <link href="assets/css/colorPicker.css" rel="stylesheet" />
+  <link href="assets/css/bootstrap-responsive.css" rel="stylesheet"/>
+  <link href="assets/css/colorPicker.css" rel="stylesheet"/>
 
   <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
   <!--[if lt IE 9]>
@@ -46,7 +46,9 @@
       <a class="brand" href="#">Trelloviz (beta)</a>
 
       <div class="pull-right">
-        <span id="loadingSpinner" data-bind="visible: showSpinner" style="display: none"><img src="assets/img/roller.gif" alt="loading data from Trello ..." title="loading data from Trello ..."></span>
+        <span id="loadingSpinner" data-bind="visible: showSpinner" style="display: none"><img
+                src="assets/img/roller.gif" alt="loading data from Trello ..."
+                title="loading data from Trello ..."></span>
         <button id="connectButton" class="btn btn-small btn-primary"
                 data-bind="visible: loggedIn() == false, click: actionLogIn">Log Into Trello
         </button>
@@ -87,15 +89,29 @@
           </button>
           <div class="control-group" data-bind="css:{ error: apiKey().length != 32 }">
             <label for="txtTRELLOAPIKEY">Your Trello API Key</label>
-            <input id="txtTRELLOAPIKEY" type="text" class="span11" maxlength="32" data-bind="value: apiKey"
+            <input id="txtTRELLOAPIKEY" type="text" class="span10" maxlength="32" data-bind="value: apiKey"
                    placeholder="Enter your 32 letters Trello API key...">
+              <span class="span2 pull-right" data-bind="visible: html5LocalStorageAvailable">
+                <button id="btnSaveApiKey" class="btn" data-bind="click: actionSaveApiKeyToLocalStorage">Save</button>
+                <abbr title="Will save the API key to your browser's local storage. Doesn't send any data to the server.">
+                  <small>?</small>
+                </abbr>
+              </span>
           </div>
-                <span class="help-block">
-                    This API key is used to connect to trello.com only. It will nowhere saved/stored, but only in <b>your</b> browser.
-                    <br>
-                    You can get it from www.trello.com, logging in, clicking on top left <em>'i'</em>, clicking <em>'more...'</em>,
-                    clicking <em>'API'</em> and the last step is to click on <em>'generate...'</em>.
-                </span>
+          <div class="help-block span12">
+            This API key is used to connect to trello.com only.
+            It will nowhere saved/stored, but only in <b>your</b> browser.<br>
+            <small>
+              You can get it from www.trello.com:
+              <ul>
+                <li>logging in,</li>
+                <li>clicking on top left <em>'i'</em>,</li>
+                <li>clicking <em>'more...'</em>,</li>
+                <li>clicking <em>'API'</em>,</li>
+                <li>and the last step is to click on <em>'generate API key...'</em>.</li>
+              </ul>
+            </small>
+          </div>
         </fieldset>
       </form>
     </div>
@@ -180,4 +196,3 @@
 
 </body>
 </html>
-
