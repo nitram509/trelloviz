@@ -24,7 +24,7 @@
 
 var TrellovizData = function () {
 // placeholder
-}
+};
 
 TrellovizData.prototype = {
 
