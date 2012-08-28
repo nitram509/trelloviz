@@ -7,14 +7,13 @@
 
     <script src="http://localhost/actions-20120814.js" type="text/javascript"></script> <!-- sorry, no public data -->
 
-    <script src="js/TrellovizCoreEngine.js" type="text/javascript"></script>
+    <script src="../src/js/TrellovizCoreEngine.js" type="text/javascript"></script>
 
 </head>
 <body>
     <script type="text/javascript">
 
-
-        var engine = new Trelloviz.Core.Engine();
+        var engine = Trelloviz.Core.Engine();
         var result = engine.computeVizData_all_lists(data);
 
         console.log(JSON.stringify(result));

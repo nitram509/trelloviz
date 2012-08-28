@@ -23,7 +23,7 @@
 "use strict"; // jshint ;_;
 
 if (typeof Trelloviz == 'undefined') {
-  var Trelloviz = function () { };
+  var Trelloviz = { /* namespace */ };
 }
 
 Trelloviz.viewModel = {
@@ -34,7 +34,7 @@ Trelloviz.viewModel = {
   trelloLists:ko.observableArray(),
   html5LocalStorageAvailable:ko.observable(false),
 
-  areaChart : null,
+  areaChart:null,
   vizDataForJit:null,
 
   showConfigPanel:ko.observable(false),
@@ -43,16 +43,16 @@ Trelloviz.viewModel = {
     Trelloviz.viewModel.showConfigPanel(!visible);
   },
 
-  actionListsUpdated:function() {
+  actionListsUpdated:function () {
     this.updateVizDataFromTrelloListsSettings();
     this.areaChart.loadJSON(this.vizDataForJit);
   },
 
-  updateVizDataFromTrelloListsSettings:function() {
+  updateVizDataFromTrelloListsSettings:function () {
     var trellolists = this.trelloLists();
     var jitdata = this.vizDataForJit;
-    var index=trellolists.length;
-    while(index--) {
+    var index = trellolists.length;
+    while (index--) {
       jitdata.color[index] = trellolists[index].color();
     }
   },
@@ -61,7 +61,7 @@ Trelloviz.viewModel = {
     var apikey = Trelloviz.viewModel.apiKey();
     if (apikey != null && apikey.length == 32) {
       Trelloviz.viewModel.showConfigPanel(false);
-      jQuery.getScript('https://api.trello.com/1/client.js?key=' + apikey, Trelloviz_trelloLogin);
+      jQuery.getScript('https://api.trello.com/1/client.js?key=' + apikey, Trelloviz.trelloLogin);
     }
     else {
       Trelloviz.viewModel.showConfigPanel(true);
@@ -73,7 +73,7 @@ Trelloviz.viewModel = {
     Trello.deauthorize();
   },
 
-  actionSaveApiKeyToLocalStorage:function() {
+  actionSaveApiKeyToLocalStorage:function () {
     localStorage.trelloviz_api_key = this.apiKey();
   },
 
@@ -83,11 +83,13 @@ Trelloviz.viewModel = {
     // core computing ...
     var engine = new Trelloviz.Core.Engine();
     Trelloviz.viewModel.vizDataForJit = engine.computeVizData_all_lists(trellodata);
-    Trelloviz.viewModel.areaChart = Trelloviz_showGraphic(Trelloviz.viewModel.vizDataForJit);
+    Trelloviz.viewModel.areaChart = Trelloviz.showGraphic(Trelloviz.viewModel.vizDataForJit);
 
     // make colors observable for changing it via color picker
     var listsWithNaturalOrder = engine.retrieveListsWithNaturalOrder();
-    listsWithNaturalOrder.forEach(function (item) {item.color = ko.observable(item.color)});
+    listsWithNaturalOrder.forEach(function (item) {
+      item.color = ko.observable(item.color)
+    });
     Trelloviz.viewModel.trelloLists(listsWithNaturalOrder);
   }
 
@@ -97,16 +99,16 @@ Trelloviz.trelloLoadAndShowUserInfo = function () {
   this.viewModel.showSpinner(true);
   Trello.members.get("me", function (member) {
     Trelloviz.viewModel.fullTrelloUserName(member.fullName);
-    this.viewModel.showSpinner(false);
+    Trelloviz.viewModel.showSpinner(false);
   });
 }
 
 Trelloviz.trelloLoadAndShowBoards = function () {
   this.viewModel.showSpinner(true);
-  Trello.get("members/me/boards", {}, Trelloviz_showBoards);
+  Trello.get("members/me/boards", {}, Trelloviz.showBoards);
 }
 
-var Trelloviz_onAuthorize = function () {
+Trelloviz.onAuthorize = function () {
   Trelloviz.viewModel.showSpinner(false);
   var reallyLoggedIn = (typeof Trello != "undefined") && Trello.authorized();
   Trelloviz.viewModel.loggedIn(reallyLoggedIn);
@@ -120,51 +122,29 @@ var Trelloviz_onAuthorize = function () {
   }
 };
 
-var Trelloviz_onAuthorizeError = function () {
+Trelloviz.onAuthorizeError = function () {
   Trelloviz.viewModel.loggedIn(false);
   Trelloviz.viewModel.showSpinner(false);
 };
 
-var Trelloviz_trelloLogin = function (data, textStatus, jqxhr) {
+Trelloviz.trelloLogin = function (data, textStatus, jqxhr) {
   Trelloviz.viewModel.showSpinner(true);
   Trello.authorize({
     interactive:true,
     type:"popup",
-    success:Trelloviz_onAuthorize,
-    error:Trelloviz_onAuthorizeError,
+    success:Trelloviz.onAuthorize,
+    error:Trelloviz.onAuthorizeError,
     expiration:"1day",
     scope:{ read:true, write:false }
   });
 };
 
-//var Trelloviz_onListSelected = function (listId) {
-//  Trello.get("lists/" + listId + "/cards", {}, me.showCards);
-//}
-
-//var Trelloviz_showLists = function (lists) {
-//  var $uiwidget = $('<div class="ui-widget">').appendTo("#output");
-//  $('<label>').text('Your Lists: ').appendTo($uiwidget);
-//  var $select = $('<select id="comboboxLists">').appendTo($uiwidget);
-//
-//  $("#comboboxLists").combobox({
-//                                 selected:function (event, ui) {
-//                                   var listid = ui.item.value;
-//                                   me.onListSelected(listid);
-//                                 }
-//                               }
-//  );
-//
-//  $.each(lists, function (idx, list) {
-//    $('<option value=' + list.id + '>').text(list.name).appendTo($select);
-//  });
-//};
-
-var Trelloviz_onShowActionForBoard = function (boardId) {
+Trelloviz.onShowActionForBoard = function (boardId) {
   Trelloviz.viewModel.showSpinner(true);
   Trello.get("boards/" + boardId + "/actions", { /* fields:"data,type,date" */ limit:"1000"}, Trelloviz.viewModel.setNewData);
 }
 
-var Trelloviz_showBoards = function (boards) {
+Trelloviz.showBoards = function (boards) {
   Trelloviz.viewModel.showSpinner(false);
   var options = [];
   var selectedBoard = {
@@ -175,7 +155,7 @@ var Trelloviz_showBoards = function (boards) {
   $("#selectBoardCombo").empty();
 
   $("#btnShowChart").click(function (event) {
-    Trelloviz_onShowActionForBoard(selectedBoard['id']);
+    Trelloviz.onShowActionForBoard(selectedBoard['id']);
   });
 
   $.each(boards, function (idx, board) {
@@ -186,14 +166,14 @@ var Trelloviz_showBoards = function (boards) {
         var boardid = event.target.value;
         selectedBoard['id'] = boardid;
         selectedBoard['name'] = event.target.text;
-//                Trelloviz_onBoardSelected(boardid);
+//                Trelloviz.onBoardSelected(boardid);
       }
     );
   });
 
 };
 
-var Trelloviz_showGraphic = function (viz_data) {
+Trelloviz.showGraphic = function (viz_data) {
 
   $("#graphic").empty();
   $('<div id="viz_container" style="min-height: 700px">').appendTo("#graphic");
@@ -243,7 +223,7 @@ var Trelloviz_showGraphic = function (viz_data) {
 };
 
 // load API KEY from local HTML5 storage
-(function() {
+(function () {
   if (typeof(Storage) !== "undefined") {
     Trelloviz.viewModel.html5LocalStorageAvailable(true);
     if (localStorage.trelloviz_api_key) {
