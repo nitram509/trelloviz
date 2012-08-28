@@ -22,13 +22,15 @@
 
 "use strict"; // jshint ;_;
 
-var TrellovizData = function () {
-// placeholder
-};
+if (typeof Trelloviz == 'undefined') {
+  var Trelloviz = function () { };
+}
 
-TrellovizData.prototype = {
+Trelloviz.Core = function () { /* namespace */ };
 
-  defaultColors:["#416D9C", "#70A35E", "#EBB056", "#C74243", "#83548B", "#909291", "#557EAA"],
+Trelloviz.Core.Engine = {
+
+  defaultColors:[],
   listOrder:{}, // name:'name', listIdx:0, color:'#abc', id:'123abc'
   counterPerList:{},
   cardToListMap:{},
@@ -38,8 +40,20 @@ TrellovizData.prototype = {
     'color':[]
   },
 
-  computeVizData_all_lists:function (trelloActionData) {
+  reset_properties:function () {
+    this.defaultColors = ["#416D9C", "#70A35E", "#EBB056", "#C74243", "#83548B", "#909291", "#557EAA"];
+    this.listOrder = {};
+    this.counterPerList = {};
+    this.cardToListMap = {};
+    this.vizDataForJit = {
+      'label':[],
+      'values':[],
+      'color':[]
+    };
+  },
 
+  computeVizData_all_lists:function (trelloActionData) {
+    this.reset_properties();
     this.sortTrelloDataByDateAscending(trelloActionData);
 
     for (var idx = 0; idx < trelloActionData.length; idx++) {
@@ -184,8 +198,8 @@ TrellovizData.prototype = {
     if (validData) {
       this.vizDataForJit.values.push(
         {
-          label  : unixtimestamp,
-          values : this.retrieveValueRowWithNaturalOrder()
+          label:unixtimestamp,
+          values:this.retrieveValueRowWithNaturalOrder()
         }
       );
     }

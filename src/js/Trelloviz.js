@@ -81,12 +81,12 @@ Trelloviz.viewModel = {
     Trelloviz.viewModel.showSpinner(false);
 
     // core computing ...
-    var trellovizData = new TrellovizData();
-    Trelloviz.viewModel.vizDataForJit = trellovizData.computeVizData_all_lists(trellodata);
+    var engine = new Trelloviz.Core.Engine();
+    Trelloviz.viewModel.vizDataForJit = engine.computeVizData_all_lists(trellodata);
     Trelloviz.viewModel.areaChart = Trelloviz_showGraphic(Trelloviz.viewModel.vizDataForJit);
 
     // make colors observable for changing it via color picker
-    var listsWithNaturalOrder = trellovizData.retrieveListsWithNaturalOrder();
+    var listsWithNaturalOrder = engine.retrieveListsWithNaturalOrder();
     listsWithNaturalOrder.forEach(function (item) {item.color = ko.observable(item.color)});
     Trelloviz.viewModel.trelloLists(listsWithNaturalOrder);
   }
