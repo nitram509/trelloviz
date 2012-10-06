@@ -34,6 +34,8 @@ Trelloviz.viewModel = {
   trelloLists:ko.observableArray(),
   html5LocalStorageAvailable:ko.observable(false),
 
+  core_option_keepArchiveCards:ko.observable(false),
+
   areaChart:null,
   vizDataForJit:null,
 
@@ -81,7 +83,9 @@ Trelloviz.viewModel = {
     Trelloviz.viewModel.showSpinner(false);
 
     // core computing ...
-    var engine = new Trelloviz.Core.Engine();
+    var opts = {};
+    opts.keepArchivedCards = Trelloviz.viewModel.core_option_keepArchiveCards();
+    var engine = new Trelloviz.Core.Engine(opts);
     Trelloviz.viewModel.vizDataForJit = engine.computeVizData_all_lists(trellodata);
     Trelloviz.viewModel.areaChart = Trelloviz.showGraphic(Trelloviz.viewModel.vizDataForJit);
 
