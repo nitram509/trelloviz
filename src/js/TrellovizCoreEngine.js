@@ -27,7 +27,15 @@ if (typeof Trelloviz == 'undefined') {
 }
 
 Trelloviz.Core = { /* namespace */ };
-Trelloviz.Core.Engine = function () {
+Trelloviz.Core.Engine = function (options) {
+
+  options = options || {};
+  var _options = {};
+  _options.countArchivedCards = (typeof options.countArchivedCards != 'undefined') ? options.countArchivedCards : true;
+
+  function isCountArchivedCards() {
+    return _options.countArchivedCards;
+  }
 
   return {
 
@@ -88,6 +96,8 @@ Trelloviz.Core.Engine = function () {
     },
 
     actionArchiveCard:function (trelloActionRecord) {
+      if (!isCountArchivedCards()) return;
+
       var listid = this.cardToListMap[trelloActionRecord.data.card.id];
       if (listid || false) {
         if (this.counterPerList[listid] <= 0) {

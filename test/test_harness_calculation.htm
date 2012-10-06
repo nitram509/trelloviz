@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="ISO-8859-1">
-<title>Trelloviz</title>
+  <meta charset="ISO-8859-1">
+  <title>Trelloviz</title>
 
   <script src="assets/js/jquery.js" type="text/javascript"></script>
   <script src="js/sample_test_board_actions.js" type="text/javascript"></script>
@@ -12,8 +12,14 @@
 <body>
 
 <script type="text/javascript">
-    var engine = new Trelloviz.Core.Engine();
-    engine.computeVizData_all_lists(data)
+
+  function loadStaticTestData() {
+    return data;
+  }
+
+  var engine = new Trelloviz.Core.Engine();
+  engine.computeVizData_all_lists(loadStaticTestData());
+
 </script>
 
 </body>
