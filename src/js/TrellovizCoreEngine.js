@@ -31,10 +31,10 @@ Trelloviz.Core.Engine = function (options) {
 
   options = options || {};
   var _options = {};
-  _options.countArchivedCards = (typeof options.countArchivedCards != 'undefined') ? options.countArchivedCards : true;
+  _options.keepArchivedCards = (typeof options.keepArchivedCards != 'undefined') ? options.keepArchivedCards : false;
 
-  function isCountArchivedCards() {
-    return _options.countArchivedCards;
+  function isKeepArchivedCards() {
+    return _options.keepArchivedCards;
   }
 
   return {
@@ -96,7 +96,7 @@ Trelloviz.Core.Engine = function (options) {
     },
 
     actionArchiveCard:function (trelloActionRecord) {
-      if (!isCountArchivedCards()) return;
+      if (isKeepArchivedCards()) return;
 
       var listid = this.cardToListMap[trelloActionRecord.data.card.id];
       if (listid || false) {
