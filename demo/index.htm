@@ -138,7 +138,7 @@
   <div class="row-fluid">
     <div class="span11" id="graphic" style="min-height: 700px"></div>
 
-    <div id="listPanel_for_grap_legend" class="span1 pull-right" data-bind="visible: loggedIn">
+    <div id="listPanel_for_graph_legend" class="span1 pull-right" data-bind="visible: loggedIn">
       <script type="text/html" id="listnames-template">
         <li>
           <i class="icon-list" data-bind="colorPicker:$data.color"></i>
@@ -147,6 +147,10 @@
       </script>
       <ul data-bind="template: {name: 'listnames-template', foreach: trelloLists}" class="unstyled">
       </ul>
+      <span>
+        <input id="btnKeepArchiveCards" type="checkbox" data-bind="checked: core_option_keepArchiveCards">
+        Keep Cards
+      </span>
     </div>
 
 

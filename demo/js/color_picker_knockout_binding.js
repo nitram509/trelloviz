@@ -31,7 +31,7 @@ if (typeof ko != 'undefined') {
       $(element).val(ko.utils.unwrapObservable(value));
       $(element).colorPicker({onColorChange:function (elementId, newColorValue) {
         value(newColorValue);
-        Trelloviz.viewModel.actionListsUpdated(); // TODO: bad hack, chalenge: how to update view model?
+        Trelloviz.viewModel.actionListsUpdated(); // TODO: bad hack, challenge: how to update view model?
       }});
     },
     update:function (element, valueAccessor, allBindingsAccessor, viewModel) {
