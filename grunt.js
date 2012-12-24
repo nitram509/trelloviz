@@ -27,26 +27,25 @@ module.exports = function (grunt) {
           'src/templates/compiled.js',
           'src/setup.js'
         ],
-        dest: 'dist/<%= pkg.name %>.modules.min.js'
+        dest: 'dist/trelloviz.modules.min.js'
       }
     },
 
-//    mincss: {
-//      dist: {
-//        files: {
-//          'dist/css/': [
-//            "assets/css/bootstrap-responsive.css",
-//            "assets/css/bootstrap.css",
-//            "assets/css/colorPicker.css"
-//          ]
-//        }
-//      }
-//    },
+    mincss: {
+      dist: {
+        files: {
+          'dist/css/<%= pkg.name %>.css': [
+            "assets/css/bootstrap.css",
+            "assets/css/bootstrap-responsive.css",
+            "assets/css/colorPicker.css"
+          ]
+        }
+      }
+    },
 
     copy: {
       dist: {
         files: {
-          'dist/css/': "assets/css/**/*.css",
           'dist/js/': "assets/js/**/*.js",
           'dist/img/': "assets/img/**/*.*"
         }
@@ -63,7 +62,7 @@ module.exports = function (grunt) {
           '* <%= pkg.homepage %> \n' +
           '* Copyright (c) <%= grunt.template.today("yyyy") %>' +
           ' <%= pkg.author.name %>\n' +
-          '* Licensed under AGPLv3. */'
+          '* Licensed under Apache License, Version 2.0 */'
     },
 
     concat: {
@@ -75,7 +74,7 @@ module.exports = function (grunt) {
 //          'lib/backbone.min.js',
           '<config:min.dist.dest>'
         ],
-        dest: 'dist/<%= pkg.name %>.min.js'
+        dest: 'dist/js/trelloviz.min.js'
       }
     },
 
