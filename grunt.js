@@ -27,7 +27,7 @@ module.exports = function (grunt) {
           'src/templates/compiled.js',
           'src/setup.js'
         ],
-        dest: 'dist/trelloviz.modules.min.js'
+        dest: 'dist/js/trelloviz.modules.min.js'
       }
     },
 
