@@ -43,18 +43,6 @@ module.exports = function (grunt) {
     },
 
 
-    min: {
-      dist: {
-        src: [
-          'src/js/Trelloviz.js',
-          'src/js/TrellovizCoreEngine.js',
-          'src/js/knockout.binding/color_picker.js'
-        ],
-        dest: 'dist/js/trelloviz.modules.min.js'
-      }
-    },
-
-
     mincss: {
       dist: {
         files: {
@@ -74,6 +62,18 @@ module.exports = function (grunt) {
           '* Copyright (c) <%= grunt.template.today("yyyy") %>' +
           ' <%= pkg.author.name %>\n' +
           '* Licensed under Apache License, Version 2.0 */'
+    },
+
+
+    min: {
+      dist: {
+        src: [
+          'src/js/Trelloviz.js',
+          'src/js/TrellovizCoreEngine.js',
+          'src/js/knockout.binding/color_picker.js'
+        ],
+        dest: 'dist/js/trelloviz.modules.min.js'
+      }
     },
 
 
