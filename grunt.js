@@ -8,33 +8,57 @@ module.exports = function (grunt) {
 
     pkg: '<json:package.json>',
 
-//    lint: {
-//      all: ['trelloviz.js', 'src/js/*.js', 'assets/js/**/*.js',  'test/js/*.js']
-//    },
 
-//    jshint: {
-//      options: {
-//        browser: true
-//      }
-//    },
+    clean: {
+      dist: ['dist/**/*.*']
+    },
+
+
+    copy: {
+      develop: {
+        files: {
+          'dist/js/': ["assets/js/**/*.js", "src/js/**/*.*"],
+          'dist/css/': "assets/css/**/*.css",
+          'dist/img/': "assets/img/**/*.*"
+        }
+      },
+      release: {
+        files: {
+          'dist/js/': "assets/js/**/*.js",
+          'dist/img/': "assets/img/**/*.*"
+        }
+      }
+    },
+
+
+    targethtml: {
+      develop: {
+        src: 'src/index.html',
+        dest: 'dist/index.html'
+      },
+      release: {
+        src: 'src/index.html',
+        dest: 'dist/index.html'
+      }
+    },
+
 
     min: {
       dist: {
         src: [
-          'src/app.js',
-          'src/utils.js',
-          'src/register.js',
-          'src/templates/compiled.js',
-          'src/setup.js'
+          'src/js/Trelloviz.js',
+          'src/js/TrellovizCoreEngine.js',
+          'src/js/knockout.binding/color_picker.js'
         ],
         dest: 'dist/js/trelloviz.modules.min.js'
       }
     },
 
+
     mincss: {
       dist: {
         files: {
-          'dist/css/<%= pkg.name %>.css': [
+          'dist/css/trelloviz.min.css': [
             "assets/css/bootstrap.css",
             "assets/css/bootstrap-responsive.css",
             "assets/css/colorPicker.css"
@@ -43,19 +67,6 @@ module.exports = function (grunt) {
       }
     },
 
-    copy: {
-      dist: {
-        files: {
-          'dist/js/': "assets/js/**/*.js",
-          'dist/img/': "assets/img/**/*.*"
-        }
-      },
-      develop: {
-        files: {
-          'dist/js/': "src/js/**/*.*"
-        }
-      }
-    },
 
     meta: {
       banner: '/* <%= pkg.name %>\n' +
@@ -64,6 +75,7 @@ module.exports = function (grunt) {
           ' <%= pkg.author.name %>\n' +
           '* Licensed under Apache License, Version 2.0 */'
     },
+
 
     concat: {
       dist: {
@@ -76,21 +88,10 @@ module.exports = function (grunt) {
         ],
         dest: 'dist/js/trelloviz.min.js'
       }
-    },
-
-    targethtml: {
-      dist: {
-        src: 'src/index.html',
-        dest: 'dist/index.html'
-      }
-    },
-
-    clean: {
-      dist: ['dist/**/*.*']
     }
   });
 
   // Default task.
-  grunt.registerTask('default', 'clean:dist targethtml copy:dist copy:develop');
-  grunt.registerTask('release', 'clean:dist min concat mincss targethtml copy');
+  grunt.registerTask('default', 'clean copy:develop targethtml:develop');
+  grunt.registerTask('release', 'clean copy:release targethtml:release mincss min concat');
 };
