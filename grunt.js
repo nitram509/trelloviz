@@ -17,15 +17,16 @@ module.exports = function (grunt) {
     copy: {
       develop: {
         files: {
-          'dist/js/': ["assets/js/**/*.js", "src/js/**/*.*"],
-          'dist/css/': "assets/css/**/*.css",
-          'dist/img/': "assets/img/**/*.*"
+          'dist/app/js/': "src/app/js/**/*.*",
+          'dist/js/': "src/js/**/*.js",
+          'dist/css/': "src/css/**/*.css",
+          'dist/img/': "src/img/**/*.*"
         }
       },
       release: {
         files: {
-          'dist/js/': "assets/js/**/*.js",
-          'dist/img/': "assets/img/**/*.*"
+          'dist/js/': "src/js/**/*.js",
+          'dist/img/': "src/img/**/*.*"
         }
       }
     },
@@ -47,9 +48,9 @@ module.exports = function (grunt) {
       dist: {
         files: {
           'dist/css/trelloviz.min.css': [
-            "assets/css/bootstrap.css",
-            "assets/css/bootstrap-responsive.css",
-            "assets/css/colorPicker.css"
+            "src/css/bootstrap.css",
+            "src/css/bootstrap-responsive.css",
+            "src/css/colorPicker.css"
           ]
         }
       }
@@ -68,9 +69,9 @@ module.exports = function (grunt) {
     min: {
       dist: {
         src: [
-          'src/js/Trelloviz.js',
-          'src/js/TrellovizCoreEngine.js',
-          'src/js/knockout.binding/color_picker.js'
+          'src/app/js/Trelloviz.js',
+          'src/app/js/TrellovizCoreEngine.js',
+          'src/app/js/knockout.binding/color_picker.js'
         ],
         dest: 'dist/js/trelloviz.modules.min.js'
       }
