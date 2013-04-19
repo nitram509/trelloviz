@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+<html lang="en" ng-app ng-controller="TrellovizController">
 <head>
   <meta charset="utf-8">
   <title>Trelloviz (beta)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description"
-        content="Trelloviz - Some fancy visualizations for Trello.com boards. Most likely only useful, if you're doing Kanban ;-)">
+  <meta name="description" content="Trelloviz - Some fancy visualizations for Trello.com boards. Most likely only useful, if you're doing Kanban ;-)">
   <meta name="author" content="Martin W. Kirst">
-  <meta name="keywords"
-        content="trello, completion rate, time tracking, statistics, lead time, cumulative flow diagram">
+  <meta name="keywords" content="trello, completion rate, time tracking, statistics, lead time, cumulative flow diagram">
+
+  <script type="text/javascript" src="js/angular.min.js"></script>
 
   <!--(if target develop)><!-->
     <link href="css/bootstrap.css" rel="stylesheet"/>
@@ -51,8 +51,7 @@
         <span id="loadingSpinner" data-bind="visible: showSpinner" style="display: none"><img
                 src="img/roller.gif" alt="loading data from Trello ..."
                 title="loading data from Trello ..."></span>
-        <button id="connectButton" class="btn btn-small btn-primary"
-                data-bind="visible: loggedIn() == false, click: actionLogIn">Log Into Trello
+        <button id="connectButton" class="btn btn-small btn-primary" ng-click="actionLogIn()">Log Into Trello
         </button>
         <button id="disconnectButton" class="btn btn-small" style="display: none;"
                 data-bind="visible: loggedIn, click: actionLogOut">Logout
@@ -83,40 +82,7 @@
 
 
   <div class="row-fluid">
-    <div id="configApiKeyPanel" class="span7" style="display:none;" data-bind="visible: showConfigPanel">
-      <form class="well form-horizontal">
-        <fieldset>
-          <button id="btnCloseConfigApiKeyPanel" class="close fade" href="#"
-                  data-bind="click: toggleConfigApiKeyPanelVisible">×
-          </button>
-          <div class="control-group" data-bind="css:{ error: apiKey().length != 32 }">
-            <label for="txtTRELLOAPIKEY">Your Trello API Key</label>
-            <input id="txtTRELLOAPIKEY" type="text" class="span10" maxlength="32" data-bind="value: apiKey"
-                   placeholder="Enter your 32 letters Trello API key...">
-              <span class="span2 pull-right" data-bind="visible: html5LocalStorageAvailable">
-                <button id="btnSaveApiKey" class="btn" data-bind="click: actionSaveApiKeyToLocalStorage">Save</button>
-                <abbr title="Will save the API key to your browser's local storage. Doesn't send any data to the server.">
-                  <small>?</small>
-                </abbr>
-              </span>
-          </div>
-          <div class="help-block span12">
-            This API key is used to connect to trello.com only.
-            It will nowhere saved/stored, but only in <b>your</b> browser.<br>
-            <small>
-              You can get it from www.trello.com:
-              <ul>
-                <li>logging in,</li>
-                <li>clicking on top left <em>'i'</em>,</li>
-                <li>clicking <em>'more...'</em>,</li>
-                <li>clicking <em>'API'</em>,</li>
-                <li>and the last step is to click on <em>'generate API key...'</em>.</li>
-              </ul>
-            </small>
-          </div>
-        </fieldset>
-      </form>
-    </div>
+    <div ng-view></div>
   </div>
 
   <div class="row-fluid">
@@ -140,7 +106,7 @@
   <div class="row-fluid">
     <div class="span11" id="graphic" style="min-height: 700px"></div>
 
-    <div id="listPanel_for_graph_legend" class="span1 pull-right" data-bind="visible: loggedIn">
+    <div id="listPanel_for_graph_legend" class="span1 pull-right" ng-hide="loggedIn">
       <script type="text/html" id="listnames-template">
         <li>
           <i class="icon-list" data-bind="colorPicker:$data.color"></i>
@@ -150,41 +116,21 @@
       <ul data-bind="template: {name: 'listnames-template', foreach: trelloLists}" class="unstyled">
       </ul>
       <span>
-        <input id="btnKeepArchiveCards" type="checkbox" data-bind="checked: core_option_keepArchiveCards">
+        <input id="btnKeepArchiveCards" type="checkbox" ng-model="core_option_keepArchiveCards">
         Keep Cards
       </span>
     </div>
 
-
   </div>
 
 </div>
-<!-- /container -->
 
-<script src="js/jquery.js" type="text/javascript"></script>
-<script src="js/jquery.colorPicker.js" type="text/javascript"></script>
-<script src="js/bootstrap-dropdown.js" type="text/javascript"></script>
 <script src="js/jit.js" type="text/javascript"></script>
 
-<script src="js/knockout.js" type="text/javascript"></script>
-
-<!--(if target develop)><!-->
-  <script src="app/js/TrellovizCoreEngine.js"></script>
-  <script src="app/js/Trelloviz.js"></script>
-  <script src="app/js/knockout/binding/color_picker.js"></script>
-<!--<!(endif)-->
-
-<!--(if target release)><!-->
-  <script src="js/trelloviz.min.js"></script>
-<!--<!(endif)-->
-
-<script type="text/javascript">
-  ko.applyBindings(Trelloviz.viewModel);
-</script>
+<script type="text/javascript" src="app/js/app.js"></script>
+<script type="text/javascript" src="app/js/TrellovizCoreService.js"></script>
+<script type="text/javascript" src="app/js/TrellovizController.js"></script>
+<script type="text/javascript" src="app/js/ConfigController.js"></script>
 
 </body>
 </html>
-
-<!--
-Trelloviz.viewModel.loggedIn(true);$.getJSON("/kanban-actions.js",function(data) {Trelloviz.viewModel.setNewData(data);})
--->

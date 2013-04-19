@@ -1,0 +1,33 @@
+<div id="configApiKeyPanel" class="span7">
+  <form class="well form-horizontal">
+    <fieldset>
+      <button id="btnCloseConfigApiKeyPanel" class="close fade" href="#" data-bind="click: toggleConfigApiKeyPanelVisible">×
+      </button>
+      <div class="control-group" data-bind="css:{ error: apiKey().length != 32 }">
+        <label for="txtTRELLOAPIKEY">Your Trello API Key</label>
+        <input id="txtTRELLOAPIKEY" type="text" class="span10" maxlength="32" data-bind="value: apiKey"
+               placeholder="Enter your 32 letters Trello API key...">
+              <span class="span2 pull-right" data-bind="visible: html5LocalStorageAvailable">
+                <button id="btnSaveApiKey" class="btn" data-bind="click: actionSaveApiKeyToLocalStorage">Save</button>
+                <abbr title="Will save the API key to your browser's local storage. Doesn't send any data to the server.">
+                  <small>?</small>
+                </abbr>
+              </span>
+      </div>
+      <div class="help-block span12">
+        This API key is used to connect to trello.com only.
+        It will nowhere saved/stored, but only in <b>your</b> browser.<br>
+        <small>
+          You can get it from www.trello.com:
+          <ul>
+            <li>logging in,</li>
+            <li>clicking on top left <em>'i'</em>,</li>
+            <li>clicking <em>'more...'</em>,</li>
+            <li>clicking <em>'API'</em>,</li>
+            <li>and the last step is to click on <em>'generate API key...'</em>.</li>
+          </ul>
+        </small>
+      </div>
+    </fieldset>
+  </form>
+</div>
