@@ -1,13 +1,13 @@
-<div id="configApiKeyPanel" class="span7">
+<div id="configApiKeyPanel" class="span7" ng-controller="ConfigController">
   <form class="well form-horizontal">
     <fieldset>
       <a class="close fade" href="#/" >×</a>
       <div class="control-group" data-bind="css:{ error: apiKey().length != 32 }">
         <label for="txtTRELLOAPIKEY">Your Trello API Key</label>
-        <input id="txtTRELLOAPIKEY" type="text" class="span10" maxlength="32" data-bind="value: apiKey"
+        <input id="txtTRELLOAPIKEY" type="text" class="span10" maxlength="32" ng-model="textApiKey"
                placeholder="Enter your 32 letters Trello API key...">
               <span class="span2 pull-right" data-bind="visible: html5LocalStorageAvailable">
-                <button id="btnSaveApiKey" class="btn" data-bind="click: actionSaveApiKeyToLocalStorage">Save</button>
+                <button id="btnSaveApiKey" class="btn" ng-click="actionSaveApiKeyToLocalStorage()">Save</button>
                 <abbr title="Will save the API key to your browser's local storage. Doesn't send any data to the server.">
                   <small>?</small>
                 </abbr>
