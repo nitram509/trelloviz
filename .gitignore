@@ -3,5 +3,4 @@ test/js/actions.js
 target
 dist
 node_modules
-
-
+out
