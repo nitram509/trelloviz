@@ -1,8 +1,7 @@
 <div id="configApiKeyPanel" class="span7">
   <form class="well form-horizontal">
     <fieldset>
-      <button id="btnCloseConfigApiKeyPanel" class="close fade" href="#" data-bind="click: toggleConfigApiKeyPanelVisible">×
-      </button>
+      <a class="close fade" href="#/" >×</a>
       <div class="control-group" data-bind="css:{ error: apiKey().length != 32 }">
         <label for="txtTRELLOAPIKEY">Your Trello API Key</label>
         <input id="txtTRELLOAPIKEY" type="text" class="span10" maxlength="32" data-bind="value: apiKey"
