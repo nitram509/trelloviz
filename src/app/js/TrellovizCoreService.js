@@ -23,7 +23,7 @@
 "use strict"; // jshint ;_;
 
 
-angular.module('Trelloviz', []).
-    factory('TrellovizCoreService', function () {
-      console.info('jippie');
-    });
+//angular.module('Trelloviz', []).
+//    factory('TrellovizCoreService', function () {
+//      console.info('jippie');
+//    });
