@@ -1,4 +1,10 @@
 
+.popup-top-right {
+  position: absolute;
+  right: 25px;
+  top: auto;
+}
+
 #configApiKeyPanel {
   padding-top: 60px;
 }
