@@ -1,4 +1,6 @@
-'use strict';
+(function () {
+  "use strict";
+}());
 
 /* App Module */
 

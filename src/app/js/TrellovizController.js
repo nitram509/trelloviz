@@ -1,5 +1,7 @@
 
-"use strict"; // jshint ;_;
+(function () {
+  "use strict";
+}());
 
 function TrellovizController($scope) {
 

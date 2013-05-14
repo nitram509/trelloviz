@@ -20,7 +20,9 @@
  * under the License.
  */
 
-"use strict"; // jshint ;_;
+(function () {
+  "use strict";
+}());
 
 
 //angular.module('Trelloviz', []).

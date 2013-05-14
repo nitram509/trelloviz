@@ -1,4 +1,6 @@
-"use strict"; // jshint ;_;
+(function () {
+  "use strict";
+}());
 
 function ConfigController($scope) {
 
