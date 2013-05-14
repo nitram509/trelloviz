@@ -1,4 +1,4 @@
-module.exports = function (grunt) {
+module.exports = function(grunt) {
 
   grunt.loadNpmTasks('grunt-contrib');
   grunt.loadNpmTasks('grunt-targethtml');
@@ -10,7 +10,9 @@ module.exports = function (grunt) {
 
 
     clean: {
-      dist: ['dist/**/*.*']
+      dist: {
+        src : ['dist/**/*.*']
+      }
     },
 
 
@@ -59,10 +61,10 @@ module.exports = function (grunt) {
 
     meta: {
       banner: '/* <%= pkg.name %> <%= pkg.version %> (<%= grunt.template.today("yyyy-mm-dd") %>)\n' +
-          '* <%= pkg.homepage %> \n' +
-          '* Copyright (c) <%= grunt.template.today("yyyy") %>' +
-          ' <%= pkg.author.name %>\n' +
-          '* Licensed under Apache License, Version 2.0 */'
+         '* <%= pkg.homepage %> \n' +
+         '* Copyright (c) <%= grunt.template.today("yyyy") %>' +
+         ' <%= pkg.author.name %>\n' +
+         '* Licensed under Apache License, Version 2.0 */'
     },
 
 
@@ -95,4 +97,5 @@ module.exports = function (grunt) {
   // Default task.
   grunt.registerTask('default', 'clean copy:develop targethtml:develop');
   grunt.registerTask('release', 'clean copy:release targethtml:release mincss min concat');
+
 };
