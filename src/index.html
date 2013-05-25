@@ -27,12 +27,8 @@
     <div class="container-fluid">
       <a class="brand" href="#">Trelloviz (beta)</a>
 
-      <div class="pull-right">
-        <!--<span id="loadingSpinner"><img-->
-               <!--src="img/roller.gif" alt="loading data from Trello ..."-->
-               <!--title="loading data from Trello ..."></span>-->
-        <button id="connectButton" class="btn btn-small btn-primary" ng-click="actionLogIn()">Log Into Trello</button>
-        <!--<button id="disconnectButton" class="btn btn-small" >Logout</button>-->
+      <div class="pull-right" ng-controller="Trelloviz.MenuBarController">
+        <button id="connectButton" class="btn btn-small btn-primary" ng-click="actionLogIn()" ng-show="isNotLoggedIn()">Log Into Trello</button>
         <a class="btn btn-small dropdown-toggle" href="#/config">
           <i class="icon-wrench"></i> Settings
         </a>
@@ -64,6 +60,7 @@
 <script type="text/javascript" src="app/js/ConfigStoreService.js"></script>
 <script type="text/javascript" src="app/js/ConfigController.js"></script>
 <script type="text/javascript" src="app/js/CfdController.js"></script>
+<script type="text/javascript" src="app/js/MenuBarController.js"></script>
 
 </body>
 </html>
