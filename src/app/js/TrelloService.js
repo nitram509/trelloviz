@@ -12,6 +12,7 @@
       },
 
       authorizeCallback: function (token) {
+        ConfigStoreService.saveSessionToken(token);
         _token = token;
       }
 

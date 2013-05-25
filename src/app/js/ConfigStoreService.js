@@ -19,6 +19,19 @@
       return '';
     },
 
+    saveSessionToken: function (value) {
+      if (typeof(Storage) !== "undefined") {
+        localStorage.trelloviz_session_token = value;
+      }
+    },
+
+    loadSessionToken: function () {
+      if (typeof(Storage) !== "undefined") {
+        return localStorage.trelloviz_session_token || '';
+      }
+      return '';
+    },
+
     hasApiKey: function () {
       if (typeof(Storage) !== "undefined") {
         if (localStorage.trelloviz_api_key) {
