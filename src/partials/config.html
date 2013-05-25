@@ -1,32 +1,25 @@
 <div id="configApiKeyPanel" class="span7" ng-controller="ConfigController">
   <form class="well form-horizontal">
-    <fieldset>
-      <a class="close fade" href="#/" >×</a>
-      <div class="control-group" data-bind="css:{ error: apiKey().length != 32 }">
-        <label for="txtTRELLOAPIKEY">Your Trello API Key</label>
-        <input id="txtTRELLOAPIKEY" type="text" class="span10" maxlength="32" ng-model="textApiKey"
-               placeholder="Enter your 32 letters Trello API key...">
-              <span class="span2 pull-right" data-bind="visible: html5LocalStorageAvailable">
-                <button id="btnSaveApiKey" class="btn" ng-click="actionSaveApiKeyToLocalStorage()">Save</button>
-                <abbr title="Will save the API key to your browser's local storage. Doesn't send any data to the server.">
-                  <small>?</small>
-                </abbr>
-              </span>
+      <div class="control-group">
+        <a class="close fade" href="#/">×</a>
       </div>
-      <div class="help-block span12">
-        This API key is used to connect to trello.com only.
-        It will nowhere saved/stored, but only in <b>your</b> browser.<br>
-        <small>
-          You can get it from www.trello.com:
-          <ul>
-            <li>logging in,</li>
-            <li>clicking on top left <em>'i'</em>,</li>
-            <li>clicking <em>'more...'</em>,</li>
-            <li>clicking <em>'API'</em>,</li>
-            <li>and the last step is to click on <em>'generate API key...'</em>.</li>
-          </ul>
-        </small>
+
+      <div class="control-group">
+        <label class="control-label" for="txtTRELLOAPIKEY">Your Trello API Key</label>
+        <div class="controls">
+          <input id="txtTRELLOAPIKEY" type="text" maxlength="32" style="width:95%;" ng-model="textApiKey" placeholder="Enter your 32 characters Trello API key..."/>
+          <small class="help-block"><em>
+            Trelloviz runs only in your browser and doesn't have any server side logic running.
+            Thus it will get access to the Trello API via an API Key, that you have to provide.
+            Grab yours from <a href="https://www.trello.com/docs" target="_blank">https://www.trello.com/docs</a>
+          </em></small>
+        </div>
       </div>
-    </fieldset>
+
+      <div class="control-group">
+        <div class="controls">
+          <button id="btnSaveApiKey" class="btn" ng-click="actionSaveApiKeyToLocalStorage()">Save</button>
+        </div>
+      </div>
   </form>
 </div>
