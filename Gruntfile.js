@@ -50,14 +50,14 @@ module.exports = function (grunt) {
           "dist/css/trelloviz.css": "src/app/css/trelloviz.less"
         }
       },
-      dist: {
+      release: {
         options: {
           paths: ["src/app/css"],
           compress: true,
           yuicompress: true
         },
         files: {
-          "dist/css/trelloviz.css": "src/app/css/trelloviz.less"
+          "dist/css/trelloviz.css": "src/app/css/trelloviz.min.less"
         }
       }
     },
