@@ -17,6 +17,15 @@
         return localStorage.trelloviz_api_key || '';
       }
       return '';
+    },
+
+    hasApiKey: function () {
+      if (typeof(Storage) !== "undefined") {
+        if (localStorage.trelloviz_api_key) {
+          return localStorage.trelloviz_api_key.trim().length == 32;
+        }
+      }
+      return false;
     }
   }
 

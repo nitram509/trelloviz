@@ -4,7 +4,8 @@
   <meta charset="utf-8">
   <title>Trelloviz (beta)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Trelloviz - Some fancy visualizations for Trello.com boards. Most likely only useful, if you're doing Kanban ;-)">
+  <meta name="description"
+        content="Trelloviz - Some fancy visualizations for Trello.com boards. Most likely only useful, if you're doing Kanban ;-)">
   <meta name="author" content="Martin W. Kirst">
   <meta name="keywords" content="trello, completion rate, time tracking, statistics, lead time, cumulative flow diagram">
 
@@ -28,7 +29,24 @@
       <a class="brand" href="#">Trelloviz (beta)</a>
 
       <div class="pull-right" ng-controller="Trelloviz.MenuBarController">
-        <button id="connectButton" class="btn btn-small btn-primary" ng-click="actionLogIn()" ng-show="isNotLoggedIn()">Log Into Trello</button>
+        <form class="login-form" action="https://trello.com/1/authorize" method="GET" ng-show="isNotLoggedIn()">
+          <input type="hidden" name="key" value="{{getTrelloApiKey()}}">
+          <input type="hidden" name="redirect_uri" value="{{trelloCallbackUrl}}">
+          <input type="hidden" name="callback_method" value="fragment">
+          <input type="hidden" name="expiration" value="30days">
+          <input type="hidden" name="name" value="Trelloviz">
+          <input type="hidden" name="response_type" value="token">
+          <input type="hidden" name="scope" value="read">
+          <button class="btn btn-small btn-primary" ng-disabled="isLoginDisabled()" >
+            Login via Trello
+          </button>
+        </form>
+        <span ng-show="isLoggedIn()">
+          <img alt="avatar" ng-src="{{getAvatarUrl()}}" class="avatar">
+          <button class="btn btn-small" >
+            <i class="icon-remove-circle" title="Sign off"></i>
+          </button>
+        </span>
         <a class="btn btn-small dropdown-toggle" href="#/config">
           <i class="icon-wrench"></i> Settings
         </a>
@@ -36,13 +54,6 @@
 
     </div>
   </div>
-</div>
-
-<div id="loggedin" class="alert alert-success popup-top-right" style="display: none">
-  <button class="close fade" href="#" data-bind="click: function(){$('#loggedin').fadeOut();}">×</button>
-  <p>Trello: logged in as</p>
-
-  <p data-bind="text: fullTrelloUserName"></p>
 </div>
 
 <div class="container-fluid">
@@ -58,9 +69,11 @@
 
 <script type="text/javascript" src="app/js/app.js"></script>
 <script type="text/javascript" src="app/js/ConfigStoreService.js"></script>
+<script type="text/javascript" src="app/js/TrelloService.js"></script>
 <script type="text/javascript" src="app/js/ConfigController.js"></script>
 <script type="text/javascript" src="app/js/CfdController.js"></script>
 <script type="text/javascript" src="app/js/MenuBarController.js"></script>
+<script type="text/javascript" src="app/js/TrelloCallbackController.js"></script>
 
 </body>
 </html>
