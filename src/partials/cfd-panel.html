@@ -1,3 +1,39 @@
 <div id="cumulativeFlowDiagram">
-<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>JIT
+
+  <div class="row-fluid">
+
+    <div id="selectBoardPanel" class="span11">
+      <form class="form-inline">
+        <span class="control-group">
+            <label class="control-label" for="selectBoardCombo">Select list</label>
+            <span class="controls">
+                <select id="selectBoardCombo">
+
+                </select>
+            </span>
+        </span>
+        <button id="btnShowChart" class="btn" href="#">Show Chart</button>
+      </form>
+    </div>
+
+  </div>
+
+  <div class="span11" id="graphic" style="min-height: 700px">
+    <!-- GRAPH WILL BE DISPLAYED HERE -->
+  </div>
+
+  <div id="listPanel_for_graph_legend" class="span1 pull-right" ng-hide="loggedIn">
+    <script type="text/html" id="listnames-template">
+      <li>
+        <i class="icon-list" data-bind="colorPicker:$data.color"></i>
+        <span data-bind="text: $data.name"><!-- NAME --></span>
+      </li>
+    </script>
+    <ul data-bind="template: {name: 'listnames-template', foreach: trelloLists}" class="unstyled">
+    </ul>
+    <span>
+    <input id="btnKeepArchiveCards" type="checkbox" ng-model="core_option_keepArchiveCards">
+      Keep Cards
+    </span>
+  </div>
 </div>

@@ -47,7 +47,7 @@ module.exports = function (grunt) {
           yuicompress: false
         },
         files: {
-          "dist/css/trelloviz.css": "src/app/css/trelloviz.less"
+          "dist/app/css/trelloviz.css": "src/app/css/trelloviz.less"
         }
       },
       release: {
@@ -57,7 +57,7 @@ module.exports = function (grunt) {
           yuicompress: true
         },
         files: {
-          "dist/css/trelloviz.css": "src/app/css/trelloviz.min.less"
+          "dist/app/css/trelloviz.css": "src/app/css/trelloviz.min.less"
         }
       }
     },
