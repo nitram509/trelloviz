@@ -38,6 +38,30 @@ module.exports = function (grunt) {
         ]
       }
     },
+
+    less: {
+      develop: {
+        options: {
+          paths: ["src/app/css"],
+          compress: false,
+          yuicompress: false
+        },
+        files: {
+          "dist/css/trelloviz.css": "src/app/css/trelloviz.less"
+        }
+      },
+      dist: {
+        options: {
+          paths: ["src/app/css"],
+          compress: true,
+          yuicompress: true
+        },
+        files: {
+          "dist/css/trelloviz.css": "src/app/css/trelloviz.less"
+        }
+      }
+    },
+
     uglify: {
       options: {
         banner: '<%= banner %>'
@@ -106,8 +130,9 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-contrib-less');
 
   // Default task.
-  grunt.registerTask('default', [ 'concat', 'copy:develop']);
+  grunt.registerTask('default', [ 'concat', 'copy:develop', 'less:develop']);
 
 };
