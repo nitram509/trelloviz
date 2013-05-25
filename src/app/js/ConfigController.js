@@ -2,11 +2,15 @@
   "use strict";
 }());
 
-function ConfigController($scope) {
+function ConfigController($scope, ConfigStoreService) {
 
-  $scope.textApiKey = '';
+  $scope.textApiKey = ConfigStoreService.loadApiKey();
 
   $scope.actionSaveApiKeyToLocalStorage = function () {
-    // todo
+    ConfigStoreService.saveApiKey($scope.textApiKey)
+  }
+
+  $scope.isLocalStoragaeAvailable = function() {
+    return ConfigStoreService.isLocalStoragaeAvailable();
   }
 }
