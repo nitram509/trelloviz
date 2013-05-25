@@ -1,6 +1,6 @@
 {
   "name": "Trelloviz",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "homepage": "http://nitram509.github.com/trelloviz/",
   "repository": "http://github.com/nitram509/trelloviz/",
   "bugs": {
@@ -8,7 +8,8 @@
   },
   "author": {
     "name": "Martin W. Kirst",
-    "url" : "https://github.com/nitram509"
+    "url" : "https://github.com/nitram509",
+    "twitter": "https://www.twitter.com/nitram509"
   },
   "keywords": "Trello, visualization",
   "devDependencies": {

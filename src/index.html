@@ -11,13 +11,7 @@
   <link href="css/bootstrap.css" rel="stylesheet"/>
   <link href="css/bootstrap-responsive.css" rel="stylesheet"/>
   <link href="css/colorPicker.css" rel="stylesheet"/>
-
-  <!--(if target develop)><!-->
-    <link href="app/css/trelloviz.css" rel="stylesheet"/>
-  <!--<!(endif)-->
-  <!--(if target release)><!-->
-    <link href="app/css/trelloviz.min.css" rel="stylesheet"/>
-  <!--<!(endif)-->
+  <link href="app/css/trelloviz.css" rel="stylesheet"/>
 
   <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
   <!--[if lt IE 9]>
@@ -34,22 +28,14 @@
       <a class="brand" href="#">Trelloviz (beta)</a>
 
       <div class="pull-right">
-        <span id="loadingSpinner" data-bind="visible: showSpinner" style="display: none"><img
-                src="img/roller.gif" alt="loading data from Trello ..."
-                title="loading data from Trello ..."></span>
-        <button id="connectButton" class="btn btn-small btn-primary" ng-click="actionLogIn()">Log Into Trello
-        </button>
-        <button id="disconnectButton" class="btn btn-small" style="display: none;"
-                data-bind="visible: loggedIn, click: actionLogOut">Logout
-        </button>
+        <!--<span id="loadingSpinner"><img-->
+               <!--src="img/roller.gif" alt="loading data from Trello ..."-->
+               <!--title="loading data from Trello ..."></span>-->
+        <button id="connectButton" class="btn btn-small btn-primary" ng-click="actionLogIn()">Log Into Trello</button>
+        <!--<button id="disconnectButton" class="btn btn-small" >Logout</button>-->
         <a class="btn btn-small dropdown-toggle" href="#/config">
           <i class="icon-wrench"></i> Settings
         </a>
-        <ul class="dropdown-menu btn-small">
-          <li id="menuConfigApiKey"><a href="#" data-bind="click: toggleConfigApiKeyPanelVisible">Configure
-            Trello API Key</a>
-          </li>
-        </ul>
       </div>
 
     </div>
