@@ -2,7 +2,7 @@
   "use strict";
 }());
 
-function ConfigController($scope, ConfigStoreService) {
+Trelloviz.ConfigController = function ($scope, ConfigStoreService) {
 
   $scope.textApiKey = ConfigStoreService.loadApiKey();
 

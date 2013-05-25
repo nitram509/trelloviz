@@ -3,7 +3,7 @@
   "use strict";
 }());
 
-function TrellovizController($scope) {
+Trelloviz.TrellovizController = function ($scope) {
 
   $scope.apiKey = '';
   $scope.loggedIn = false;
