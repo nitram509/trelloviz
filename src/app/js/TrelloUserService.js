@@ -22,30 +22,35 @@
 
 (function () {
   "use strict";
+
+  Trelloviz.factory('TrelloUserService', ['TrelloService', function (TrelloService) {
+
+    var _id = '';
+    var _avatarHash = '';
+
+    var TrelloUserService = {
+      getId: function () {
+        return _id;
+      },
+      getAvatarHash: function () {
+        return _avatarHash;
+      },
+      getAvatarUrl: function () {
+        TrelloService.getTokenMemberInfo(function (data) {
+          console.info('OK:' + data);
+        });
+        return "https://trello-avatars.s3.amazonaws.com/" + this.getAvatarHash() + "/30.png";
+      },
+      getFullName: function () {
+        return 'Unknown Full Name';
+      },
+      getUserName: function () {
+        return 'Unknown User Name';
+      }
+    };
+
+    return TrelloUserService;
+  }]);
+
 }());
 
-Trelloviz.MenuBarController = function ($scope, TrelloService, ConfigStoreService, TrelloUserService) {
-
-  $scope.trelloCallbackUrl = 'http://localhost/trelloviz/index.html#/trellocallback?';
-
-  $scope.getTrelloApiKey = function() {
-    return ConfigStoreService.loadApiKey();
-  };
-
-  $scope.isNotLoggedIn = function() {
-    return !TrelloService.isLoggedIn();
-  };
-
-  $scope.isLoggedIn = function() {
-    return TrelloService.isLoggedIn();
-  };
-
-  $scope.isLoginDisabled = function() {
-    return !ConfigStoreService.hasApiKey();
-  };
-
-  $scope.getAvatarUrl = function() {
-    return TrelloUserService.getAvatarUrl();
-  }
-
-}

@@ -25,9 +25,9 @@
 
   Trelloviz.factory('TrelloService', ['$http', 'ConfigStoreService', function ($http, ConfigStoreService) {
 
-    var _token = '';
+    var _token = ConfigStoreService.loadSessionToken();
 
-    return {
+    var TrelloService = {
 
       isLoggedIn: function () {
         return _token.length > 0;
@@ -36,11 +36,38 @@
       authorizeCallback: function (token) {
         ConfigStoreService.saveSessionToken(token);
         _token = token;
-      }
+      },
 
+      getTokenMemberInfo: function (successCallback) {
+//       var url = "https://api.trello.com/1/tokens/" + _token + "/member?key=" + ConfigStoreService.loadApiKey();
+        var config = {
+          method: 'jsonp',
+          url: 'https://api.trello.com/1/tokens/' + _token + '/member',
+          headers: {
+            'Accept': 'application/json, text/javascript, */*; q=0.01'
+          },
+          'transformResponse': function (data, headersGetter) {
+            console.info('data>>' + data);
+            console.info('headersGetter>>' + headersGetter);
+          },
+          params: {
+            'key': ConfigStoreService.loadApiKey()
+          }
+        };
+        $http(config).
+           success(function (data, status, headers, config) {
+//             successCallback(data);
+             console.info("SUCCESS" + data);
+           }).
+           error(function (data, status, headers, config) {
+             // called asynchronously if an error occurs
+             // or server returns response with an error status.
+           });
+      }
     };
-  }
-  ]);
+
+    return TrelloService;
+  }]);
 
 }());
 
