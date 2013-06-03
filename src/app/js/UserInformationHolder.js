@@ -23,12 +23,12 @@
 (function () {
   "use strict";
 
-  Trelloviz.factory('TrelloUserService', ['TrelloService', function (TrelloService) {
+  Trelloviz.factory('UserInformationHolder', ['TrelloService', function (TrelloService) {
 
     var _id = '';
     var _avatarHash = '';
 
-    var TrelloUserService = {
+    var UserInformationHolder = {
       getId: function () {
         return _id;
       },
@@ -36,10 +36,11 @@
         return _avatarHash;
       },
       getAvatarUrl: function () {
-        TrelloService.getTokenMemberInfo(function (data) {
-          console.info('OK:' + data);
-        });
-        return "https://trello-avatars.s3.amazonaws.com/" + this.getAvatarHash() + "/30.png";
+//        TrelloService.getTokenMemberInfo(function (data) {
+//          console.info('OK:' + data);
+//        });
+//        return "https://trello-avatars.s3.amazonaws.com/" + this.getAvatarHash() + "/30.png";
+        return "img/no_avatar.png";
       },
       getFullName: function () {
         return 'Unknown Full Name';
@@ -49,7 +50,7 @@
       }
     };
 
-    return TrelloUserService;
+    return UserInformationHolder;
   }]);
 
 }());

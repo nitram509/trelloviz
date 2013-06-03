@@ -27,6 +27,10 @@
 
     var _token = ConfigStoreService.loadSessionToken();
 
+    (function resetAngularJS_HTTP_defaultHeaderToMake_CORS_work() {
+      delete $http.defaults.headers.common['X-Requested-With'];
+    })();
+
     var TrelloService = {
 
       isLoggedIn: function () {
@@ -39,22 +43,13 @@
       },
 
       getTokenMemberInfo: function (successCallback) {
-//       var url = "https://api.trello.com/1/tokens/" + _token + "/member?key=" + ConfigStoreService.loadApiKey();
+        var url = "https://api.trello.com/1/tokens/" + _token + "/member";
         var config = {
-          method: 'jsonp',
-          url: 'https://api.trello.com/1/tokens/' + _token + '/member',
-          headers: {
-            'Accept': 'application/json, text/javascript, */*; q=0.01'
-          },
-          'transformResponse': function (data, headersGetter) {
-            console.info('data>>' + data);
-            console.info('headersGetter>>' + headersGetter);
-          },
           params: {
             'key': ConfigStoreService.loadApiKey()
           }
         };
-        $http(config).
+        $http.get(url, config).
            success(function (data, status, headers, config) {
 //             successCallback(data);
              console.info("SUCCESS" + data);

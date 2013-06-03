@@ -24,9 +24,9 @@
   "use strict";
 }());
 
-Trelloviz.MenuBarController = function ($scope, TrelloService, ConfigStoreService, TrelloUserService) {
+Trelloviz.MenuBarController = function ($scope, TrelloService, ConfigStoreService, UserInformationHolder) {
 
-  $scope.trelloCallbackUrl = 'http://localhost/trelloviz/index.html#/trellocallback?';
+  $scope.trelloCallbackUrl = 'http://trelloviz.lab/trelloviz/index.html#/trellocallback?';
 
   $scope.getTrelloApiKey = function() {
     return ConfigStoreService.loadApiKey();
@@ -45,7 +45,7 @@ Trelloviz.MenuBarController = function ($scope, TrelloService, ConfigStoreServic
   };
 
   $scope.getAvatarUrl = function() {
-    return TrelloUserService.getAvatarUrl();
+    return UserInformationHolder.getAvatarUrl();
   }
 
 }
