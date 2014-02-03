@@ -17,3 +17,7 @@ There's a public visible Trello board,
 https://trello.com/board/trelloviz-development/502972ab1982d7c71d0681b7
 
 You're invited to send feedback, bugs, suggestions and more ... 
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/nitram509/trelloviz/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
