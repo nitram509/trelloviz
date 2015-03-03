@@ -14,10 +14,10 @@ http://nitram509.github.com/trelloviz/
 
 [![License: Apache 2.0](https://img.shields.io/:license-Apache%202.0-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 
+[![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/)
 
 #### Current Status
 
-[![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/)
 
 * on hold
 * migration to us AngularJS was not finished, see branch 'move-to-angularjs'
