@@ -97,7 +97,7 @@ Trelloviz.viewModel = {
     Trelloviz.viewModel.trelloLists(listsWithNaturalOrder);
   }
 
-}
+};
 
 Trelloviz.trelloLoadAndShowUserInfo = function () {
   this.viewModel.showSpinner(true);
@@ -105,12 +105,12 @@ Trelloviz.trelloLoadAndShowUserInfo = function () {
     Trelloviz.viewModel.fullTrelloUserName(member.fullName);
     Trelloviz.viewModel.showSpinner(false);
   });
-}
+};
 
 Trelloviz.trelloLoadAndShowBoards = function () {
   this.viewModel.showSpinner(true);
   Trello.get("members/me/boards", {}, Trelloviz.showBoards);
-}
+};
 
 Trelloviz.onAuthorize = function () {
   Trelloviz.viewModel.showSpinner(false);
@@ -146,33 +146,20 @@ Trelloviz.trelloLogin = function (data, textStatus, jqxhr) {
 Trelloviz.onShowActionForBoard = function (boardId) {
   Trelloviz.viewModel.showSpinner(true);
   Trello.get("boards/" + boardId + "/actions", { /* fields:"data,type,date" */ limit:"1000"}, Trelloviz.viewModel.setNewData);
-}
+};
 
 Trelloviz.showBoards = function (boards) {
   Trelloviz.viewModel.showSpinner(false);
-  var options = [];
-  var selectedBoard = {
-    id:boards[0].id,
-    name:boards[0].name
-  };
 
   $("#selectBoardCombo").empty();
 
   $("#btnShowChart").click(function (event) {
-    Trelloviz.onShowActionForBoard(selectedBoard['id']);
+    var selectedBoardId = $('#selectBoardCombo').val();
+    Trelloviz.onShowActionForBoard(selectedBoardId);
   });
 
   $.each(boards, function (idx, board) {
-    var $opt = $('<option value=' + board.id + '>').text(board.name).appendTo("#selectBoardCombo");
-    options.push($opt[0]);
-    $($opt).click(
-      function (event) {
-        var boardid = event.target.value;
-        selectedBoard['id'] = boardid;
-        selectedBoard['name'] = event.target.text;
-//                Trelloviz.onBoardSelected(boardid);
-      }
-    );
+    $('<option value=' + board.id + '>').text(board.name).appendTo("#selectBoardCombo");
   });
 
 };

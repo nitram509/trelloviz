@@ -20,9 +20,10 @@
   <!--<!(endif)-->
 
   <style>
-    /*body {*/
-      /*padding-top: 60px; *//* 60px to make the container go all the way to the bottom of the topbar */
-    /*}*/
+    body {
+      padding-top: 60px;  /*60px to make the container go all the way to the bottom of the topbar*/
+    }
+
 
     .popup-top-right {
       position: absolute;
@@ -121,7 +122,7 @@
 
   <div class="row-fluid">
 
-    <div id="selectBoardPanel" class="span11" style="display:none;" data-bind="visible: loggedIn">
+    <div id="BoardPanel" class="span11" style="display:none;" data-bind="visible: loggedIn">
       <form class="form-inline">
         <span class="control-group">
             <label class="control-label" for="selectBoardCombo">Select list</label>
@@ -131,7 +132,7 @@
                 </select>
             </span>
         </span>
-        <button id="btnShowChart" class="btn" href="#">Show Chart</button>
+        <button id="btnShowChart" class="btn" type="button" name="btnShowChart">Show Chart</button>
       </form>
     </div>
 
