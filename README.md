@@ -10,6 +10,17 @@ Web site with live demo
 -----------------------
 http://nitram509.github.com/trelloviz/
 
+##### License
+
+[![License: Apache 2.0](https://img.shields.io/:license-Apache%202.0-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
+
+
+#### Current Status
+
+[![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/)
+
+not active
+
 
 Follow and contribute
 ---------------------
@@ -17,3 +28,5 @@ There's a public visible Trello board,
 https://trello.com/board/trelloviz-development/502972ab1982d7c71d0681b7
 
 You're invited to send feedback, bugs, suggestions and more ... 
+
+If you like this project, endorse please: [![endorse](https://api.coderwall.com/nitram509/endorsecount.png)](https://coderwall.com/nitram509)
