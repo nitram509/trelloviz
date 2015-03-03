@@ -5,22 +5,38 @@
   "bugs": {
     "url": "https://github.com/nitram509/trelloviz/issues"
   },
-  "author":{
-    "name": "Martin W. Kirst"
+  "author": {
+    "name": "Martin W. Kirst",
+    "url": "https://twitter.com/nitram509"
+  },
+  "license": "Apache 2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nitram509/trelloviz"
+  },
+  "engines": {
+    "node": "0.10.x",
+    "npm": "1.4.x"
   },
   "keywords": "Trello, visualization",
   "devDependencies": {
-    "grunt": "~0.3.0",
-    "grunt-targethtml":"~0.1.0",
-    "grunt-contrib-jshint": "~0.1.0",
-    "grunt-contrib-nodeunit": "~0.1.0",
-    "grunt-contrib-clean":">=0.1.0",
-    "grunt-contrib-mincss":">=0.1.0"
+    "grunt": "~0.4.5",
+    "grunt-contrib-clean": "^0.6.0",
+    "grunt-contrib-concat": "^0.5.1",
+    "grunt-contrib-copy": "^0.8.0",
+    "grunt-contrib-cssmin": "^0.12.2",
+    "grunt-contrib-jshint": "~0.11.0",
+    "grunt-contrib-mincss": "~0.3.2",
+    "grunt-contrib-nodeunit": "~0.4.1",
+    "grunt-contrib-uglify": "^0.8.0",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-targethtml": "~0.2.6"
   },
   "licenses": [
     {
       "type": "Apache License, Version 2.0",
-      "url":"http://www.apache.org/licenses/LICENSE-2.0.html"
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
     }
-  ]
+  ],
+  "dependencies": {}
 }
