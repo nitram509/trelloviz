@@ -1,6 +1,6 @@
 trello_api_key.js 
 test/js/actions.js
 target
-dist
+dist/**
 node_modules
 out
