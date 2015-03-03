@@ -19,7 +19,9 @@ http://nitram509.github.com/trelloviz/
 
 [![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/)
 
-not active
+* on hold
+* migration to us AngularJS was not finished, see branch 'move-to-angularjs'
+* latest working version based on Knockout.js, see branch 're-activated-knockout-version-with-updates2015'
 
 
 Follow and contribute
