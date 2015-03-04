@@ -31,7 +31,7 @@ Trelloviz.viewModel = {
   loggedIn:ko.observable(false),
   showSpinner:ko.observable(false),
   fullTrelloUserName:ko.observable(''),
-  trelloLists:ko.observableArray(),
+  trelloLists:ko.observableArray([]),
   html5LocalStorageAvailable:ko.observable(false),
 
   core_option_keepArchiveCards:ko.observable(false),
