@@ -75,7 +75,7 @@ module.exports = function (grunt) {
           'dist/js/trelloviz.min.js': [
             'src/app/js/Trelloviz.js',
             'src/app/js/TrellovizCoreEngine.js',
-            'src/app/js/knockout.binding/color_picker.js'
+            'src/app/js/knockout/binding/color_picker.js'
           ]
         }
       }
