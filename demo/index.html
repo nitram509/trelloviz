@@ -10,12 +10,16 @@
   <meta name="keywords"
         content="trello, completion rate, time tracking, statistics, lead time, cumulative flow diagram">
 
-  <!-- Le styles -->
-  <link href="assets/css/bootstrap.css" rel="stylesheet"/>
+  
+  
+  <link href="css/trelloviz.min.css" rel="stylesheet"/>
+  
+
   <style>
     body {
-      padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+      padding-top: 60px;  /*60px to make the container go all the way to the bottom of the topbar*/
     }
+
 
     .popup-top-right {
       position: absolute;
@@ -23,8 +27,8 @@
       top: auto;
     }
   </style>
-  <link href="assets/css/bootstrap-responsive.css" rel="stylesheet"/>
-  <link href="assets/css/colorPicker.css" rel="stylesheet"/>
+
+
 
   <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
   <!--[if lt IE 9]>
@@ -38,16 +42,11 @@
 <div class="navbar navbar-inverse navbar-fixed-top">
   <div class="navbar-inner">
     <div class="container-fluid">
-      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </a>
       <a class="brand" href="#">Trelloviz (beta)</a>
 
       <div class="pull-right">
         <span id="loadingSpinner" data-bind="visible: showSpinner" style="display: none"><img
-                src="assets/img/roller.gif" alt="loading data from Trello ..."
+                src="img/roller.gif" alt="loading data from Trello ..."
                 title="loading data from Trello ..."></span>
         <button id="connectButton" class="btn btn-small btn-primary"
                 data-bind="visible: loggedIn() == false, click: actionLogIn">Log Into Trello
@@ -119,7 +118,7 @@
 
   <div class="row-fluid">
 
-    <div id="selectBoardPanel" class="span11" style="display:none;" data-bind="visible: loggedIn">
+    <div id="BoardPanel" class="span11" style="display:none;" data-bind="visible: loggedIn">
       <form class="form-inline">
         <span class="control-group">
             <label class="control-label" for="selectBoardCombo">Select list</label>
@@ -129,7 +128,7 @@
                 </select>
             </span>
         </span>
-        <button id="btnShowChart" class="btn" href="#">Show Chart</button>
+        <button id="btnShowChart" class="btn" type="button" name="btnShowChart">Show Chart</button>
       </form>
     </div>
 
@@ -159,43 +158,47 @@
 </div>
 <!-- /container -->
 
-<script src="assets/js/jquery.js" type="text/javascript"></script>
-<script src="assets/js/jquery.colorPicker.js" type="text/javascript"></script>
-<script src="assets/js/bootstrap-dropdown.js" type="text/javascript"></script>
-<script src="assets/js/jit.js" type="text/javascript"></script>
+<script src="js/jquery.js" type="text/javascript"></script>
+<script src="js/jquery.colorPicker.js" type="text/javascript"></script>
+<script src="js/bootstrap-dropdown.js" type="text/javascript"></script>
+<script src="js/jit.js" type="text/javascript"></script>
 
-<script src="assets/js/knockout.js" type="text/javascript"></script>
+<script src="js/knockout.js" type="text/javascript"></script>
 
-<script src="js/TrellovizCoreEngine.js"></script>
-<script src="js/Trelloviz.js"></script>
-<script src="js/color_picker_knockout_binding.js"></script>
+
+
+
+  <script src="js/trelloviz.min.js"></script>
+
+
+<script src="app/js/knockout/binding/color_picker.js"></script>
 
 <script type="text/javascript">
   ko.applyBindings(Trelloviz.viewModel);
 </script>
 
 <script type="text/javascript">
-    // <![CDATA[
-    if ("http:" == document.location.protocol) {
-        document.write(unescape("%3Cscript src='" + (("https:" == document.location.protocol) ? "http://cdn.betaeasy.com" : "http://cdn.betaeasy.com") + "/betaeasy.js' type='text/javascript'%3E%3C/script%3E"))
-    }
-    // ]]>
+  // <![CDATA[
+  if ("http:" == document.location.protocol) {
+    document.write(unescape("%3Cscript src='" + (("https:" == document.location.protocol) ? "http://cdn.betaeasy.com" : "http://cdn.betaeasy.com") + "/betaeasy.js' type='text/javascript'%3E%3C/script%3E"))
+  }
+  // ]]>
 </script>
 <script type="text/javascript">
-    // <![CDATA[
-    try {
-        BetaEasy.init({
-            betaId: '1073',
-            styleType: 'new',
-            buttonAlign: 'right',
-            language: 'en',
-            buttonBackgroundColor: '#f00',
-            buttonMouseHoverBackgroundColor: '#06C',
-            buttonImageActive: 'en/newbtn-5.png',
-            buttonImageHover: 'none'
-        });
-    } catch(err) {}
-    // ]]>
+  // <![CDATA[
+  try {
+    BetaEasy.init({
+      betaId: '1073',
+      styleType: 'new',
+      buttonAlign: 'right',
+      language: 'en',
+      buttonBackgroundColor: '#f00',
+      buttonMouseHoverBackgroundColor: '#06C',
+      buttonImageActive: 'en/newbtn-5.png',
+      buttonImageHover: 'none'
+    });
+  } catch(err) {}
+  // ]]>
 </script>
 
 <script type="text/javascript">
